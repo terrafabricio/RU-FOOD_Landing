@@ -1,0 +1,191 @@
+{
+  "meta": {
+    "name": "RU-FOOD × Tahdani — Landing comercial",
+    "description": "Estrutura, ritmo e efeitos extraídos do case 'Tahdani – Mobile App & Website Revamp' (Behance); cor, tipografia, ilustração e voz da marca RU-FOOD (tokens do app em web/src/app/globals.css e medição do card 'Sua semana no RU').",
+    "source_references": [
+      "https://www.behance.net/gallery/255995905/Tahdani-Mobile-App-Website-Revamp",
+      "RU-FOOD app — card 'Semana de 12–17 out' (screenshot 4)",
+      "web/src/app/globals.css"
+    ],
+    "created_at": "2026-10-09"
+  },
+  "design_system": {
+    "color": {
+      "palette_type": "warm monochromatic + one saturated hero hue (Tahdani: laranja #e97a2d sobre creme #fcf6ef; RU-FOOD: ketchup #e3241b sobre creme #fbf6ee)",
+      "primary": { "hex": "#e3241b", "role": "Marca, títulos display gigantes, CTA principal, blocos-capítulo cheios (equivale ao laranja #e97a2d da referência)" },
+      "secondary": { "hex": "#2a160c", "role": "Tinta marrom-chapa: texto, superfícies escuras, sidebar do painel (equivale ao verde-escuro #15311c da referência)" },
+      "accent": { "hex": "#ffc425", "role": "Mostarda: destaques de número, selos, brilho no hero e ícone de 'sparkle'" },
+      "neutral": {
+        "scale": ["#ffffff", "#fbf6ee", "#f4ead9", "#ecdfcd", "#a68d7c", "#6f5444", "#2a160c"],
+        "usage": "Creme é o fundo de página (como o #fcf6ef medido na referência); #2a160c é a cor de texto sobre creme; branco é a superfície dos cards; #ecdfcd para linhas tracejadas e grades."
+      },
+      "semantic": { "success": "#2f7a3b", "warning": "#e0a400", "error": "#b81b13", "info": "#ff7a1a" },
+      "surface": { "background": "#fbf6ee", "card": "#ffffff", "elevated": "#ffffff" },
+      "contrast_strategy": "Página clara e calma; capítulos alternam com blocos cheios de ketchup ou marrom para virar a página da história. Texto do corpo sempre #2a160c ou #6f5444 sobre creme (AA).",
+      "measurement": { "k": 8, "sampling": { "method": "deterministic_stratified", "max_pixels": 160000, "sampled_pixels": 160000 } },
+      "measured_palette": [
+        { "hex": "#d24132", "coverage": 0.7597, "role": "background" },
+        { "hex": "#faf7f0", "coverage": 0.1835, "role": "text" },
+        { "hex": "#6b2a15", "coverage": 0.0249, "role": "accent" },
+        { "hex": "#edd5cd", "coverage": 0.0202, "role": "unassigned" },
+        { "hex": "#d69d91", "coverage": 0.0051, "role": "unassigned" },
+        { "hex": "#dd7153", "coverage": 0.0049, "role": "unassigned" },
+        { "hex": "#905f4e", "coverage": 0.001, "role": "unassigned" },
+        { "hex": "#f5c44d", "coverage": 0.0008, "role": "unassigned" }
+      ],
+      "reference_measured_palette": [
+        { "hex": "#fcf6ef", "coverage": 0.731, "role": "background" },
+        { "hex": "#e97a2d", "coverage": 0.092, "role": "accent" },
+        { "hex": "#15311c", "coverage": 0.104, "role": "text" },
+        { "hex": "#ebe0c8", "coverage": 0.064, "role": "grid/surface tint" }
+      ]
+    },
+    "typography": {
+      "type_scale": {
+        "display": { "size": "clamp(3.5rem, 10vw, 9.5rem)", "weight": "800", "line_height": "0.9", "tracking": "-0.045em" },
+        "heading_1": { "size": "clamp(2.6rem, 6vw, 5.2rem)", "weight": "800", "line_height": "0.98", "tracking": "-0.035em" },
+        "heading_2": { "size": "clamp(1.9rem, 3.6vw, 3.1rem)", "weight": "800", "line_height": "1.04", "tracking": "-0.025em" },
+        "heading_3": { "size": "1.35rem", "weight": "700", "line_height": "1.2", "tracking": "-0.01em" },
+        "body": { "size": "1.0625rem", "weight": "400", "line_height": "1.6", "tracking": "0" },
+        "body_small": { "size": "0.9375rem", "weight": "400", "line_height": "1.55", "tracking": "0" },
+        "caption": { "size": "0.8125rem", "weight": "500", "line_height": "1.4", "tracking": "0.01em" },
+        "overline": { "size": "0.75rem", "weight": "700", "line_height": "1", "tracking": "0.14em" }
+      },
+      "font_families": { "heading": "'Bricolage Grotesque', system-ui, sans-serif", "body": "'DM Sans', system-ui, sans-serif", "mono": "'JetBrains Mono', ui-monospace, monospace" },
+      "font_style_notes": "Referência usa um grotesco geométrico pesado em cor de marca para títulos-âncora ('Why Tahdani') e números enormes (+70 / 100+). Mapeado para Bricolage Grotesque 800 (fonte do app)."
+    },
+    "spacing": {
+      "base_unit": "8px",
+      "scale": ["4px", "8px", "12px", "16px", "24px", "32px", "48px", "64px", "96px", "144px", "200px"],
+      "content_density": "Arejada: um único foco por dobra, cards pequenos flutuando em muito espaço vazio",
+      "section_rhythm": "Capítulos de 100–160vh; seções fixadas (pin) para histórias de rolagem"
+    },
+    "layout": {
+      "grid_system": "12 colunas com split assimétrico 5/7 (título gigante à esquerda, texto + métricas à direita)",
+      "max_content_width": "1240px",
+      "columns": "12",
+      "gutter": "24px",
+      "breakpoints": { "mobile": "0–639px", "tablet": "640–1023px", "desktop": "1024px+" },
+      "alignment_tendency": "Esquerda para texto; dispositivos centralizados com sangria e diagonais"
+    },
+    "shape": {
+      "border_radius": { "small": "12px", "medium": "20px", "large": "32px", "pill": "999px" },
+      "border_usage": "Bordas de 1px quase invisíveis em cards; contornos grossos marrons só nos stickers",
+      "divider_style": "Linhas tracejadas curvas ligando nós (diagrama) em vez de divisores retos"
+    },
+    "elevation": {
+      "shadow_style": "Sombras longas, suaves e quentes (tom marrom), nunca cinza",
+      "levels": {
+        "low": "0 1px 0 rgb(42 22 12 / .04), 0 6px 16px -10px rgb(42 22 12 / .18)",
+        "medium": "0 2px 0 rgb(42 22 12 / .04), 0 18px 40px -18px rgb(42 22 12 / .28)",
+        "high": "0 40px 80px -30px rgb(80 10 5 / .45), 0 12px 24px -12px rgb(42 22 12 / .25)"
+      },
+      "depth_cues": "Dispositivos inclinados em perspectiva, sobrepostos; cards com selo de check flutuando sobre linhas"
+    },
+    "iconography": { "style": "Linha arredondada (Lucide)", "stroke_weight": "2px", "size_scale": ["16px", "20px", "24px"], "preferred_set": "Lucide (SVG inline) + stickers ilustrados da marca" },
+    "motion": {
+      "easing": "cubic-bezier(.2,.8,.2,1)",
+      "duration_scale": { "micro": "160ms", "normal": "420ms", "macro": "900ms" },
+      "entrance_pattern": "Subir 40px + fade, escala .96→1, stagger 80ms; títulos revelados por palavra com máscara",
+      "exit_pattern": "Scrub reverso (a rolagem desfaz)",
+      "philosophy": "Rolagem conta a história: cada dobra revela um card, um dispositivo ou um número"
+    },
+    "components": {
+      "button_style": "Pílula cheia ketchup com sombra quente + seta; secundário pílula contorno marrom",
+      "input_style": "Não aplicável (landing sem formulário)",
+      "card_style": "Branco, raio 20–32px, sombra suave, ícone em quadrado arredondado tingido, selo de check circular no canto",
+      "navigation_pattern": "Barra flutuante em pílula com abas de capítulo (como 'About project · Design Process · Old & New')",
+      "modal_style": "Não aplicável",
+      "list_style": "Tabela 'Antes × Depois' com pílulas ✕ / ✓",
+      "component_notes": "Pílulas-rótulo flutuando ao lado das telas ('Poor Hierarchy ✕') viram 'Previsão no olho ✕' / 'Amostra + catraca ✓'"
+    }
+  },
+  "design_style": {
+    "aesthetic": {
+      "mood": "Caloroso, confiante, divertido sem perder a seriedade de produto corporativo",
+      "visual_metaphor": "Bandeja do RU: tudo no lugar, porção certa",
+      "era_influence": "Case-study de Behance 2025–26: product storytelling com mockups 3D",
+      "genre": "Product marketing / SaaS B2G",
+      "personality_traits": ["acolhedor", "preciso", "brincalhão", "confiável"],
+      "adjectives": ["quente", "limpo", "editorial", "tátil"]
+    },
+    "visual_language": {
+      "complexity": "Média: poucos elementos por dobra, ricos em detalhe",
+      "ornamentation": "Stickers ilustrados, grade de papel quadriculado, linhas tracejadas",
+      "whitespace_usage": "Generoso",
+      "visual_weight_distribution": "Título pesado de um lado, peso visual do dispositivo do outro",
+      "focal_strategy": "Um dispositivo ou um número gigante por dobra",
+      "contrast_level": "Alto nos títulos, suave nas superfícies",
+      "texture_usage": "Grade quadriculada sutil + pontos de 'papel de bandeja' + grão no WebGL"
+    },
+    "composition": {
+      "hierarchy_method": "Escala extrema (display 9rem vs corpo 17px) + cor de marca",
+      "balance_type": "Assimétrico",
+      "flow_direction": "Z vertical, com desvios horizontais nos capítulos fixados",
+      "grouping_strategy": "Nós ligados por linhas a um ícone central",
+      "negative_space_role": "Respiro entre capítulos; destaca os dispositivos"
+    },
+    "imagery": {
+      "photo_treatment": "Sem fotos: capturas reais do app em mockups",
+      "illustration_style": "Stickers de traço marrom grosso, preenchimento creme e laranja",
+      "graphic_elements": "Mascote GI (squircle mordido), linhas tracejadas, pílulas-rótulo, grade",
+      "pattern_usage": "Grade quadriculada 64px e pontos 14px",
+      "image_shape": "Telas com cantos de aparelho; stickers recortados"
+    },
+    "interaction_feel": {
+      "feedback_style": "Leve e elástico",
+      "hover_behavior": "Cards sobem 4px e o selo gira; dispositivos inclinam com o cursor",
+      "transition_personality": "Suave com overshoot pequeno",
+      "loading_style": "GI pisca enquanto carrega",
+      "microinteraction_density": "Média-alta"
+    },
+    "brand_voice_in_ui": {
+      "tone": "Direto, coloquial e profissional ('Nem falta, nem sobra')",
+      "formality": "Média",
+      "cta_style": "Verbo + destino ('Acessar como Nutricionista →')",
+      "empty_state_approach": "Não aplicável",
+      "error_tone": "Não aplicável"
+    }
+  },
+  "visual_effects": {
+    "overview": {
+      "effect_intensity": "Média-alta",
+      "performance_tier": "heavy",
+      "fallback_strategy": "Sem WebGL ou com 'reduzir movimento': fundo em gradiente CSS, mascote em SVG estático, seções sem pin",
+      "primary_technology": "GSAP ScrollTrigger + Three.js + shader WebGL"
+    },
+    "background_effects": {
+      "type": "generative-art",
+      "description": "Campo de manchas quentes (ketchup/mostarda/creme) com ruído e grão, reagindo ao mouse, só no hero",
+      "technology": "WebGL (fragment shader puro)",
+      "params": { "color_palette": ["#fbf6ee", "#ffc425", "#e3241b", "#ff7a1a"], "speed": "lenta", "density": "3 manchas", "opacity": "0.9", "blend_mode": "normal" }
+    },
+    "particle_systems": {
+      "enabled": true,
+      "type": "flutuação",
+      "description": "Grãos de arroz e confetes de cor flutuando atrás da GI 3D",
+      "technology": "Three.js Points",
+      "params": { "count": 180, "shape": "cápsula/ponto", "size_range": "2–6px", "movement_pattern": "deriva senoidal", "color_behavior": "paleta da marca", "interaction": "parallax pelo mouse", "spawn_area": "esfera ao redor do mascote" }
+    },
+    "3d_elements": {
+      "enabled": true,
+      "type": "objeto de marca",
+      "description": "GI extrudada (squircle com mordida) com olhos que seguem o cursor e piscam; substitui o 'laptop em cena 3D' da referência",
+      "technology": "Three.js",
+      "params": { "renderer": "WebGLRenderer, alpha, antialias", "lighting": "hemisphere quente + direcional + rim light mostarda", "camera": "Perspective 35°", "materials": "MeshPhysical vermelho acetinado com clearcoat", "geometry": "ExtrudeGeometry do path SVG da mascote, bevel", "post_processing": "nenhum", "interaction_model": "segue o mouse, flutua, gira suave no scroll" }
+    },
+    "shader_effects": {
+      "enabled": true,
+      "type": "noise-distortion",
+      "description": "Gradiente orgânico com fbm + grão",
+      "technology": "GLSL",
+      "params": { "uniforms": ["u_time", "u_res", "u_mouse"], "vertex_manipulation": "nenhuma", "fragment_output": "mistura de 4 cores por fbm", "noise_type": "value noise fbm", "distortion": "domain warping leve" }
+    },
+    "scroll_effects": {
+      "parallax": { "enabled": true, "layers": 3, "depth_range": "-120px a 120px", "speed_curve": "linear scrub" },
+      "scroll_triggered_animations": { "enabled": true, "trigger_points": "top 80%", "animation_type": "fade-up, scale, path-draw, contador", "scrub_behavior": "misto: entradas disparadas, dispositivos e linhas com scrub" },
+      "scroll_morphing": { "enabled": true }
+    },
+    "composite_notes": "Na referência: laptop em cena 3D, diagrama de nós com linhas tracejadas curvas, amostras de cor gigantes inclinadas com linhas pingando, especificação tipográfica com caixa de seleção do Figma, telas antigas × novas com pílulas ✕. Tudo traduzido para o vocabulário RU-FOOD."
+  }
+}
