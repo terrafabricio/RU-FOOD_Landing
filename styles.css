@@ -1149,3 +1149,80 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 @media (min-width: 901px) { .hero-titulo { font-size: clamp(3.4rem, 6.6vw, 6.8rem); } }
 /* Mascote do hero dentro da coluna em qualquer largura de desktop */
 @media (min-width: 901px) { .gi3d { inset: -8% -4% -8% -4%; } }
+
+/* ---------- Moldura alta: elementos "fixos" acompanham a área visível ---------- */
+:root { --alt-tela: 100svh; --vy: 0px; }
+.sentinelas { position: absolute; left: 0; top: 0; width: 1px; height: 0; pointer-events: none; visibility: hidden; }
+.sentinelas i { position: absolute; left: 0; width: 1px; height: 100px; }
+.menu-folha { max-height: calc(var(--alt-tela) - 20px - var(--topo-seguro)); }
+@media (min-width: 901px) {
+  .dilema-in, .gestao-in { min-height: min(var(--alt-tela), 1100px); }
+}
+.moldura-alta .nav { top: calc(10px + var(--vy)); }
+.moldura-alta .progresso { top: var(--vy); }
+.moldura-alta .carregando, .moldura-alta .menu { inset: auto 0 auto 0; top: var(--vy); height: var(--alt-tela); }
+.moldura-alta .pular:focus { top: calc(12px + var(--vy)); }
+.moldura-alta .assistente { bottom: auto; top: calc(var(--vy) + var(--alt-tela) - 16px); translate: 0 -100%; }
+.moldura-alta .assistente-painel { max-height: min(calc(var(--alt-tela) * .72), 540px); }
+
+/* =====================================================================
+   v3 · Hero com produto em cena e cabeçalho sempre visível
+   ===================================================================== */
+.hero { padding-bottom: clamp(56px, 9vh, 120px); }
+.hero-palco { position: relative; height: auto; min-height: 0; margin-top: 40px; }
+.hero-aparelhos { position: relative; width: 100%; padding: 8% 2% 9% 10%; transform-style: preserve-3d; }
+.hero-mac { width: 100%; filter: drop-shadow(0 40px 46px rgb(70 5 0 / .5)); }
+.hero-iphone { position: absolute; left: 0; bottom: 0; width: 24%; z-index: 3; rotate: -5deg; filter: drop-shadow(0 30px 30px rgb(70 5 0 / .5)); }
+.hero-aparelhos .gi3d { position: absolute; inset: auto; right: -3%; top: -6%; width: 34%; aspect-ratio: 1; z-index: 4; }
+.hero-aparelhos .gi3d-halo { width: 86%; background: radial-gradient(circle, rgb(255 196 37 / .55), rgb(255 196 37 / .18) 45%, rgb(255 196 37 / 0) 70%); box-shadow: none; }
+.hero-aparelhos .gi3d-halo::after { display: none; }
+.hero-aparelhos .gi3d-reserva { width: 62%; }
+.chip-dado {
+  position: absolute; z-index: 5; display: grid; gap: 3px; padding: 10px 14px; border-radius: 16px;
+  background: rgb(255 255 255 / .97); box-shadow: 0 18px 36px -16px rgb(70 5 0 / .55), 0 0 0 1px rgb(42 22 12 / .05); color: var(--tinta);
+}
+.chip-rotulo { display: flex; align-items: center; gap: 6px; font-size: .625rem; line-height: 1.2; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-suave); white-space: nowrap; }
+.chip-dado b { font: 800 1rem/1.1 var(--f-display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chip-dado .pt { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.chip-dado--a { left: 12%; top: 0; }
+.chip-dado--b { right: 0; top: 52%; }
+.chip-dado--c { right: 16%; bottom: 0; }
+@media (min-width: 560px) { .chip-dado { padding: 12px 16px; } .chip-dado b { font-size: 1.15rem; } .chip-rotulo { font-size: .6875rem; } }
+@media (min-width: 901px) {
+  .hero-in { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(24px, 3vw, 48px); min-height: min(78vh, 720px); }
+  .hero-palco { height: auto; min-height: 0; margin-top: 0; }
+  .hero-aparelhos { padding: 10% 0 10% 12%; }
+  .hero-aparelhos .gi3d { right: -6%; top: -8%; width: 36%; }
+  .chip-dado--b { right: -4%; }
+}
+
+/* Cabeçalho: sempre à mão, links das seções a partir de 1000px */
+.nav.is-escondido { transform: translateX(-50%); }
+.nav { width: min(calc(100% - 20px), 1180px); }
+.nav.is-sobre-hero:not(.is-rolado) { background: rgb(251 246 238 / .9); }
+@media (min-width: 1000px) { .nav-links { display: flex; } .nav-menu { display: none; } }
+@media (min-width: 1000px) and (max-width: 1120px) { .nav-links a { padding: 10px 10px; font-size: .8125rem; } }
+@media (min-width: 901px) { .hero-aparelhos { width: 112%; } }
+@media (min-width: 1500px) { .hero-aparelhos { width: 118%; } }
+
+/* ---------- Totem e TV com vida ---------- */
+.totem-marca { position: absolute; left: 45.1%; width: 51.5%; border-radius: 4% / 18%; border: 2px solid var(--ketchup); box-shadow: 0 0 0 4px rgb(227 36 27 / .18); opacity: 0; pointer-events: none; z-index: 2; }
+.totem-dedo { position: absolute; z-index: 3; width: 7%; aspect-ratio: 1; margin: -3.5% 0 0 -3.5%; border-radius: 50%; background: rgb(42 22 12 / .28); border: 2px solid #fff; box-shadow: 0 4px 10px rgb(0 0 0 / .3); opacity: 0; pointer-events: none; }
+.totem-ok {
+  position: absolute; z-index: 3; left: 50%; bottom: 7%; translate: -50% 0; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  padding: 1.6% 3%; border-radius: 999px; background: var(--folha); color: #fff; font: 700 clamp(.55rem, 1.3vw, .8rem)/1 var(--f-corpo); opacity: 0; pointer-events: none;
+  box-shadow: 0 8px 16px -6px rgb(0 0 0 / .35);
+}
+.totem-ok svg { width: 1.2em; height: 1.2em; }
+.tv-ao-vivo {
+  position: absolute; z-index: 2; right: 4%; top: 6%; display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+  background: var(--ketchup); color: #fff; font: 700 clamp(.5rem, 1vw, .7rem)/1 var(--f-corpo); letter-spacing: .08em; text-transform: uppercase;
+}
+.tv-ao-vivo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: ao-vivo 1.4s ease-in-out infinite; }
+@keyframes ao-vivo { 50% { opacity: .2; } }
+/* Esqueleto do totem acompanha a captura: QR à esquerda, opções à direita */
+.wire--totem .w-qr { left: 3.5%; top: 13%; width: 21.5%; }
+.wire--totem .w-titulo--direita { left: 45%; right: 18%; top: 7%; height: 8%; }
+.wire--totem .w-op { left: 45.1%; right: 3.4%; }
+.wire--totem .w-op--1 { top: 24.5%; height: 15%; } .wire--totem .w-op--2 { top: 41.1%; height: 16%; } .wire--totem .w-op--3 { top: 58.5%; height: 16%; }
+@media (prefers-reduced-motion: reduce) { .tv-ao-vivo::before { animation: none; } }

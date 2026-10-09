@@ -14,8 +14,95 @@
   if (temGsap) {
     gsap.registerPlugin(ScrollTrigger);
     gsap.defaults({ ease: "expo.out", duration: 0.9 }); // ≈ cubic-bezier(.16, 1, .3, 1) do sistema
-    ScrollTrigger.config({ ignoreMobileResize: true });
   }
+
+  // ---------- Moldura alta (página dentro de um iframe que cresce com o conteúdo) ----------
+  // Nesse caso quem rola é a página de fora: window.scrollY fica em 0 e o "viewport" tem a
+  // altura da página inteira. A área visível é medida com IntersectionObserver (que enxerga a
+  // rolagem dos ancestrais) e entregue ao ScrollTrigger por um scrollerProxy.
+  const vista = { ativo: false, y: 0, h: innerHeight, refrescando: false };
+  window.__rolagem = () => (vista.ativo ? vista.y : scrollY);
+  window.__alturaVisivel = () => (vista.ativo ? vista.h : innerHeight);
+  const emMoldura = (() => { try { return window.self !== window.top; } catch { return true; } })();
+  const pareceMolduraAlta = () => emMoldura && innerHeight > Math.max(screen.availHeight || screen.height || 0, 760) * 1.35;
+  let aoMudarVista = () => {};
+  function ativarMolduraAlta() {
+    if (vista.ativo || !pareceMolduraAlta()) return;
+    vista.ativo = true;
+    vista.h = Math.min(innerHeight, screen.availHeight || 900);
+    raiz.classList.add("moldura-alta");
+    // Sentinelas de 100px cobrindo a página: a de cima e a de baixo que estiverem visíveis
+    // dizem onde começa e onde termina a área que a pessoa está vendo.
+    const caixa = document.createElement("div");
+    caixa.className = "sentinelas";
+    caixa.setAttribute("aria-hidden", "true");
+    document.body.appendChild(caixa);
+    const visiveis = new Map();
+    const limiares = Array.from({ length: 21 }, (_, i) => i / 20);
+    const io = new IntersectionObserver((ents) => {
+      for (const en of ents) {
+        if (en.isIntersecting && en.intersectionRect.height > 0) visiveis.set(en.target, en.intersectionRect);
+        else visiveis.delete(en.target);
+      }
+      if (!visiveis.size) return;
+      let topo = Infinity, base = -Infinity;
+      visiveis.forEach((r) => { topo = Math.min(topo, r.top); base = Math.max(base, r.bottom); });
+      const h = Math.max(200, base - topo);
+      const mudouAltura = Math.abs(h - vista.h) > 60;
+      vista.y = Math.max(0, topo);
+      vista.h = h;
+      raiz.style.setProperty("--vy", vista.y.toFixed(0) + "px");
+      raiz.style.setProperty("--alt-tela", vista.h.toFixed(0) + "px");
+      aoMudarVista(mudouAltura);
+    }, { threshold: limiares });
+    let total = 0;
+    function cobrir() {
+      const alturaDoc = document.documentElement.scrollHeight;
+      const precisa = Math.ceil(alturaDoc / 100);
+      for (let i = total; i < precisa; i++) {
+        const s = document.createElement("i");
+        s.style.top = i * 100 + "px";
+        caixa.appendChild(s);
+        io.observe(s);
+      }
+      total = Math.max(total, precisa);
+    }
+    cobrir();
+    if ("ResizeObserver" in window) new ResizeObserver(cobrir).observe(document.body);
+    raiz.style.setProperty("--alt-tela", vista.h + "px");
+    if (temGsap) {
+      ScrollTrigger.scrollerProxy(document.documentElement, {
+        scrollTop(v) { return vista.refrescando ? 0 : vista.y; },
+        getBoundingClientRect() { return { top: 0, left: 0, width: innerWidth, height: vista.h }; },
+        pinType: "transform",
+      });
+      ScrollTrigger.addEventListener("refreshInit", () => (vista.refrescando = true));
+      ScrollTrigger.addEventListener("refresh", () => { vista.refrescando = false; ScrollTrigger.update(); });
+      let refrescoPendente = null;
+      aoMudarVista = (mudouAltura) => {
+        ScrollTrigger.update();
+        window.__navRolagem?.();
+        if (mudouAltura) { clearTimeout(refrescoPendente); refrescoPendente = setTimeout(() => ScrollTrigger.refresh(), 250); }
+      };
+      ScrollTrigger.refresh();
+    } else {
+      aoMudarVista = () => window.__navRolagem?.();
+    }
+  }
+
+  ativarMolduraAlta();
+  // Se a moldura só crescer depois (o site de fora ajusta a altura após carregar), recarrega
+  // uma vez: o ScrollTrigger precisa saber quem rola antes de criar os gatilhos.
+  addEventListener("resize", () => {
+    if (vista.ativo || !pareceMolduraAlta()) return;
+    try {
+      if (sessionStorage.getItem("rufood-moldura") === "1") return;
+      sessionStorage.setItem("rufood-moldura", "1");
+      location.reload();
+    } catch { /* sem sessionStorage: segue sem a correção */ }
+  });
+
+  if (temGsap) ScrollTrigger.config({ ignoreMobileResize: true });
 
   // ---------- Carregando ----------
   let liberado = false;
@@ -99,14 +186,20 @@
 
   // ---------- Rolagem suave ----------
   let lenis = null;
-  if (animar && typeof window.Lenis !== "undefined") {
+  if (animar && typeof window.Lenis !== "undefined" && !pareceMolduraAlta()) {
     lenis = new window.Lenis({ lerp: 0.1, smoothWheel: true });
     lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.add((t) => lenis?.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     window.lenis = lenis;
   }
   const irPara = (alvo, offset = -84) => {
+    if (vista.ativo) {
+      // Não dá para rolar a página de fora; pede ao navegador para trazer o alvo à vista
+      if (alvo && typeof alvo !== "number") alvo.scrollIntoView({ behavior: reduzir ? "auto" : "smooth", block: "start" });
+      else if (alvo === 0) document.body.scrollIntoView({ behavior: reduzir ? "auto" : "smooth", block: "start" });
+      return;
+    }
     if (lenis) lenis.scrollTo(alvo, { offset, duration: 1.4 });
     else {
       const y = typeof alvo === "number" ? alvo : alvo.getBoundingClientRect().top + scrollY + offset;
@@ -156,7 +249,7 @@
       if (e.shiftKey && document.activeElement === primeiro) { e.preventDefault(); ultimo.focus(); }
       else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
     });
-    matchMedia("(min-width: 1081px)").addEventListener("change", (e) => e.matches && fecharMenu(false));
+    matchMedia("(min-width: 1000px)").addEventListener("change", (e) => e.matches && fecharMenu(false));
   }
 
   // ---------- GI estacionada: atalho de navegação ----------
@@ -286,27 +379,37 @@
   const nav = document.querySelector("[data-nav]");
   let ultimoY = scrollY;
   function navRolagem() {
-    const y = scrollY;
+    const y = window.__rolagem();
     nav.classList.toggle("is-rolado", y > 40);
-    if (menuAberto) return;
-    if (y > 600 && y > ultimoY + 4) nav.classList.add("is-escondido");
-    else if (y < ultimoY - 4 || y < 600) nav.classList.remove("is-escondido");
+    // Sobre o hero vermelho o cabeçalho fica translúcido; depois vira sólido
+    const hero = document.querySelector(".hero");
+    nav.classList.toggle("is-sobre-hero", !!hero && y < hero.offsetHeight - 80);
     ultimoY = y;
   }
   addEventListener("scroll", navRolagem, { passive: true });
+  window.__navRolagem = navRolagem;
   navRolagem();
   nav.addEventListener("focusin", () => nav.classList.remove("is-escondido"));
 
+  // Link ativo: a seção que ocupa o meio da área visível (funciona também na moldura alta)
   const links = [...document.querySelectorAll(".nav-links a")];
-  if ("IntersectionObserver" in window) {
-    const secoes = links.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
-    const ioNav = new IntersectionObserver((ents) => ents.forEach((en) => {
-      if (!en.isIntersecting) return;
-      const id = "#" + en.target.id;
-      links.forEach((l) => l.classList.toggle("is-ativo", l.getAttribute("href") === id));
-    }), { rootMargin: "-50% 0px -50% 0px" });
-    secoes.forEach((s) => ioNav.observe(s));
+  const secoesNav = links.map((a) => [a, document.querySelector(a.getAttribute("href"))]).filter(([, sec]) => sec);
+  let ativoAtual = null;
+  function marcarLinkAtivo() {
+    const meio = window.__rolagem() + window.__alturaVisivel() / 2;
+    let ativo = null;
+    for (const [a, sec] of secoesNav) {
+      const topo = sec.getBoundingClientRect().top + scrollY;
+      if (topo <= meio && meio < topo + sec.offsetHeight) ativo = a;
+    }
+    if (ativo === ativoAtual) return;
+    ativoAtual = ativo;
+    links.forEach((l) => l.classList.toggle("is-ativo", l === ativo));
   }
+  addEventListener("scroll", marcarLinkAtivo, { passive: true });
+  const navAnterior = window.__navRolagem;
+  window.__navRolagem = () => { navAnterior(); marcarLinkAtivo(); };
+  marcarLinkAtivo();
 
   // ---------- Dilema: vitrine de cenários ----------
   const dilema = document.querySelector("[data-dilema]");
@@ -353,7 +456,7 @@
   pontos.forEach((btn) => {
     btn.addEventListener("click", () => {
       const idx = +btn.dataset.irPasso;
-      if (stDilema) {
+      if (stDilema && !vista.ativo) {
         irPara(stDilema.start + ((idx + 0.3) / cenas.length) * (stDilema.end - stDilema.start), 0);
         return;
       }
@@ -403,7 +506,7 @@
   if (barra) barra.style.transform = `scaleX(${1 / telas.length})`;
   document.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => {
     const i = +b.dataset.ir;
-    if (stGestao) irPara(stGestao.start + ((i + 0.5) / telas.length) * (stGestao.end - stGestao.start), 0);
+    if (stGestao && !vista.ativo) irPara(stGestao.start + ((i + 0.5) / telas.length) * (stGestao.end - stGestao.start), 0);
     else {
       mostrarTela(i);
       if (girar) { clearInterval(girar); girar = setInterval(() => mostrarTela((telaAtual + 1) % telas.length), 3600); }
@@ -599,8 +702,11 @@
     const tl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.2 } });
     tl.from("[data-hero-linha]", { yPercent: 110, rotate: 4, stagger: 0.09 })
       .from("[data-hero-in]", { y: 24, opacity: 0, stagger: 0.07, duration: 0.9 }, 0.15)
-      .from(".hero-palco .flutua, .hero-palco .etiqueta", { scale: 0.6, opacity: 0, stagger: 0.08, ease: "back.out(1.8)", duration: 0.8 }, 0.45)
-      .from(".palco", { y: 80, opacity: 0, duration: 1.4 }, 0.35);
+      .from("[data-hero-mac]", { y: 70, rotateX: 18, scale: 0.94, opacity: 0, transformPerspective: 1400, transformOrigin: "50% 100%", duration: 1.4 }, 0.2)
+      .from("[data-hero-iphone]", { x: -50, y: 90, rotate: -8, opacity: 0, duration: 1.3 }, 0.45)
+      .from(".gi3d-halo", { scale: 0.4, opacity: 0, duration: 1 }, 0.7)
+      .from("[data-chip]", { y: 18, scale: 0.9, opacity: 0, stagger: 0.12, duration: 0.8, ease: "back.out(1.6)" }, 0.9)
+      .add(() => document.querySelectorAll(".hero [data-wire]").forEach((t) => t.__wire?.play()), 0.6);
   }
 
   // Barra de progresso da leitura
@@ -647,32 +753,28 @@
     });
   });
 
-  // ---------- Hero: profundidade ----------
-  gsap.utils.toArray("[data-parallax]").forEach((el) => {
-    gsap.to(el, { y: +el.dataset.parallax * 2.2, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-  });
+  // ---------- Hero: profundidade na rolagem e um respiro com o mouse ----------
+  const rolagemHero = { trigger: ".hero", start: "top top", end: "bottom top", scrub: true };
+  // yPercent na rolagem (o y fica livre para a animação de abertura)
+  gsap.to("[data-hero-mac]", { yPercent: -6, ease: "none", scrollTrigger: rolagemHero });
+  gsap.to("[data-hero-iphone]", { yPercent: -16, ease: "none", scrollTrigger: rolagemHero });
+  gsap.utils.toArray("[data-chip]").forEach((el, i) => gsap.to(el, { yPercent: -40 - i * 15, ease: "none", scrollTrigger: rolagemHero }));
   mm.add("(min-width: 901px)", () => {
-    // O texto do hero recua enquanto o palco de dispositivos sobe
-    gsap.to(".hero-texto", { y: -70, opacity: 0.25, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "40% top", scrub: true } });
+    // O texto do hero recua enquanto a rolagem começa
+    gsap.to(".hero-texto", { y: -60, opacity: 0.3, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "60% top", scrub: true } });
   });
   if (!toque) {
-    const flutuantes = gsap.utils.toArray(".hero-palco .flutua, .hero-palco .etiqueta").map((el, i) => ({
-      x: gsap.quickTo(el, "x", { duration: 0.9, ease: "power3" }),
-      fator: (i % 2 ? -1 : 1) * (10 + i * 4),
-    }));
-    addEventListener("pointermove", (e) => {
-      const nx = e.clientX / innerWidth - 0.5;
-      flutuantes.forEach((f) => f.x(nx * f.fator));
-    }, { passive: true });
+    const aparelhos = document.querySelector("[data-hero-aparelhos]");
+    if (aparelhos) {
+      const rx = gsap.quickTo(aparelhos, "rotationX", { duration: 1.2, ease: "power3" });
+      const ry = gsap.quickTo(aparelhos, "rotationY", { duration: 1.2, ease: "power3" });
+      gsap.set(aparelhos, { transformPerspective: 1600 });
+      addEventListener("pointermove", (e) => {
+        ry((e.clientX / innerWidth - 0.5) * 4);
+        rx(-(e.clientY / innerHeight - 0.5) * 3);
+      }, { passive: true });
+    }
   }
-
-  // Palco de dispositivos levanta como o notebook do case
-  gsap.fromTo("[data-palco-cena]",
-    { rotateX: 26, y: 40, scale: 0.88 },
-    { rotateX: 0, y: 0, scale: 1, ease: "none", scrollTrigger: { trigger: "[data-palco]", start: "top 100%", end: "top 20%", scrub: 1 } });
-  gsap.fromTo(".palco-iphone",
-    { y: 130, z: 90, rotate: 8, opacity: 0.85 },
-    { y: 0, z: 90, rotate: 5, opacity: 1, ease: "none", scrollTrigger: { trigger: "[data-palco]", start: "top 95%", end: "top 10%", scrub: 1 } });
 
   // ---------- Faixa infinita: acelera e inverte com a rolagem ----------
   const trilho = document.querySelector("[data-faixa-trilho]");
@@ -718,7 +820,7 @@
   // ---------- Mouse: inclinação leve e botões magnéticos ----------
   if (!toque) {
     gsap.utils.toArray("[data-tilt], [data-tilt-leve]").forEach((el) => {
-      const forca = el.hasAttribute("data-tilt-leve") ? 3 : 7;
+      const forca = el.hasAttribute("data-tilt-leve") ? 2 : 4;
       const rx = gsap.quickTo(el, "rotationX", { duration: 0.8, ease: "power3" });
       const ry = gsap.quickTo(el, "rotationY", { duration: 0.8, ease: "power3" });
       gsap.set(el, { transformPerspective: 1200 });
@@ -728,12 +830,12 @@
       }, { passive: true });
     });
     document.querySelectorAll("[data-magnetic]").forEach((b) => {
-      const x = gsap.quickTo(b, "x", { duration: 0.5, ease: "power3" });
-      const y = gsap.quickTo(b, "y", { duration: 0.5, ease: "power3" });
+      const x = gsap.quickTo(b, "x", { duration: 0.9, ease: "power3" });
+      const y = gsap.quickTo(b, "y", { duration: 0.9, ease: "power3" });
       b.addEventListener("pointermove", (e) => {
         const r = b.getBoundingClientRect();
-        x((e.clientX - r.left - r.width / 2) * 0.18);
-        y((e.clientY - r.top - r.height / 2) * 0.3);
+        x((e.clientX - r.left - r.width / 2) * 0.06);
+        y((e.clientY - r.top - r.height / 2) * 0.1);
       });
       b.addEventListener("pointerleave", () => { x(0); y(0); });
     });
@@ -777,7 +879,56 @@
       scale: 0.5, opacity: 0, stagger: 0.14, ease: "back.out(2)", duration: 0.8,
       scrollTrigger: { trigger: "#p-aluno", start: "top 75%" },
     });
-    gsap.from(demoBox, { y: 80, rotate: -4, opacity: 0, duration: 1.3, ease: "expo.out", scrollTrigger: { trigger: demoBox, start: "top 88%" } });
+    gsap.from(demoBox, {
+      y: 90, rotate: -6, scale: 0.92, opacity: 0, duration: 1.4, ease: "expo.out",
+      scrollTrigger: { trigger: demoBox, start: "top 88%" },
+      onComplete: () => flutuar(demoBox, 10, 3.2),
+    });
+  }
+
+  // ---------- Aparelhos respiram: flutuação leve depois de entrar (pausa fora da tela) ----------
+  function flutuar(el, amplitude = 8, duracao = 3, atraso = 0) {
+    if (!el) return;
+    gsap.to(el, {
+      y: `-=${amplitude}`, duration: duracao, delay: atraso, ease: "sine.inOut", yoyo: true, repeat: -1,
+      scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", toggleActions: "play pause resume pause" },
+    });
+  }
+  flutuar(document.querySelector(".totem-cena .tv"), 7, 3.6, 0.4);
+  flutuar(document.querySelector(".totem-ipad"), 10, 3, 1.1);
+  flutuar(document.querySelector(".foto-mac-in"), 6, 3.8, 0.3);
+  flutuar(document.querySelector(".acessos-telas"), 8, 3.4, 0.2);
+  flutuar(document.querySelector(".dupla-telefones"), 9, 3.6, 1.6);
+
+  // ---------- Totem: alguém escolhe o prato na fila (em loop enquanto está na tela) ----------
+  const totem = document.querySelector("[data-totem]");
+  if (totem) {
+    const marca = totem.querySelector(".totem-marca");
+    const dedoT = totem.querySelector(".totem-dedo");
+    const ok = totem.querySelector(".totem-ok");
+    // Cartões de prato e botão "Tocar" na captura (em % da tela)
+    const opcoes = [{ y: 24.5, h: 15.1, ty: 32 }, { y: 41.1, h: 15.9, ty: 49 }, { y: 58.5, h: 16, ty: 66.6 }];
+    const tlTotem = gsap.timeline({ repeat: -1, repeatDelay: 0.8, paused: true });
+    opcoes.forEach((o) => {
+      tlTotem
+        .set(marca, { top: o.y + "%", height: o.h + "%", opacity: 0, scale: 1.04 })
+        .set(dedoT, { left: "91.7%", top: o.ty + "%", opacity: 0, scale: 1.5 })
+        .to(dedoT, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" })
+        .to(dedoT, { scale: 0.8, duration: 0.12, yoyo: true, repeat: 1 })
+        .to(marca, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, "<")
+        .to(dedoT, { opacity: 0, duration: 0.25 }, "+=0.15")
+        .fromTo(ok, { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "back.out(2)" }, "<")
+        .to([ok, marca], { opacity: 0, duration: 0.3 }, "+=1.2");
+    });
+    let comecou = false;
+    ScrollTrigger.create({
+      trigger: totem, start: "top 85%", end: "bottom 10%",
+      onToggle: (st) => {
+        if (!st.isActive) return tlTotem.pause();
+        if (!comecou) { comecou = true; gsap.delayedCall(2.4, () => tlTotem.play()); }
+        else tlTotem.play();
+      },
+    });
   }
 
   // ---------- Painel de gestão: fixado no desktop, automático no celular ----------
@@ -844,7 +995,10 @@
     const partes = wire.querySelectorAll("i");
     gsap.set(partes, { scaleX: 0, transformOrigin: "0 50%" });
     gsap.set(scan, { opacity: 0 });
-    gsap.timeline({ scrollTrigger: { trigger: tela, start: "top 88%", once: true } })
+    const noHero = !!tela.closest(".hero");
+    const tl = gsap.timeline(noHero ? { paused: true } : { scrollTrigger: { trigger: tela, start: "top 88%", once: true } });
+    if (noHero) tela.__wire = tl;
+    tl
       .to(partes, { scaleX: 1, duration: 0.7, stagger: 0.07, ease: "power3.out" })
       .set(scan, { opacity: 1, top: "0%" }, "+=0.35")
       .fromTo(wire, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", duration: 1.2, ease: "power2.inOut" }, "<")

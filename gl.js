@@ -229,7 +229,8 @@ function iniciarGI() {
   const suave = (x) => x * x * (3 - 2 * x);
   let ancorada = false;
   function voar() {
-    const p = suave(Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.62))));
+    const rolado = window.__rolagem ? window.__rolagem() : scrollY;
+    const p = suave(Math.min(1, Math.max(0, rolado / (hero.offsetHeight * 0.62))));
     raiz.style.setProperty("--voo", p.toFixed(3));
     const r = caixa.getBoundingClientRect();
     const de = { x: r.left + r.width / 2, y: r.top + r.height / 2 };

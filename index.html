@@ -127,35 +127,30 @@
           </ul>
         </div>
 
+        <!-- Produto em cena: painel no notebook, app do aluno no celular, GI no canto -->
         <div class="hero-palco" aria-hidden="true">
-          <div class="gi3d" data-gi3d>
-            <span class="gi3d-halo" aria-hidden="true"></span>
-            <!-- Sem WebGL: a GI em SVG fica no lugar -->
-            <div class="gi gi--grande gi3d-reserva" data-gi style="--gi:min(52vw,320px)">
-              <svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><g class="gi-olhos"><rect class="gi-olho" x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1"/><rect class="gi-olho" x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1"/></g></svg>
+          <div class="hero-aparelhos" data-hero-aparelhos>
+            <div class="m-mac hero-mac" data-hero-mac>
+              <div class="m-mac-tela" data-wire="painel"><img src="assets/telas/adm-painel.webp" alt="" width="1920" height="1200" fetchpriority="high" /></div>
+              <img class="m-moldura" src="assets/mockups/macbook.webp" alt="" width="1803" height="1037" />
             </div>
-          </div>
-          <img class="flutua flutua--a" data-parallax="-40" src="assets/stickers/fome.webp" alt="" width="220" height="220" />
-          <img class="flutua flutua--b" data-parallax="60" src="assets/stickers/bora-pro-ru.webp" alt="" width="200" height="200" />
-          <div class="etiqueta etiqueta--a" data-parallax="30"><svg aria-hidden="true"><use href="#i-check"/></svg> 1.300 refeições previstas</div>
-          <div class="etiqueta etiqueta--b" data-parallax="-30"><span class="pt" style="--c:#e3241b"></span>Carne bovina: 626 porções</div>
-          <div class="etiqueta etiqueta--c" data-parallax="50"><span class="pt" style="--c:#2f7a3b"></span>Vegana: 352 porções</div>
-        </div>
-      </div>
-
-      <!-- Palco: notebook e celular reais, levantando na rolagem -->
-      <div class="palco" data-palco>
-        <div class="palco-cena" data-palco-cena>
-          <div class="m-mac palco-mac">
-            <div class="m-mac-tela" data-wire="painel"><img src="assets/telas/adm-painel.webp" alt="Painel de gestão do RU-FOOD com as proteínas de hoje" width="1920" height="1200" fetchpriority="high" /></div>
-            <img class="m-moldura" src="assets/mockups/macbook.webp" alt="" width="1803" height="1037" />
-          </div>
-          <div class="m-iphone palco-iphone" data-tilt>
-            <div class="m-iphone-tela" data-wire="app">
-              <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
-              <img src="assets/telas/cel-dia.webp" alt="App do aluno: escolha do prato principal" width="780" height="1594" />
+            <div class="m-iphone hero-iphone" data-hero-iphone>
+              <div class="m-iphone-tela" data-wire="app">
+                <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
+                <img src="assets/telas/cel-semana.webp" alt="" width="780" height="1594" />
+              </div>
+              <img class="m-moldura" src="assets/mockups/iphone.webp" alt="" width="707" height="1437" />
             </div>
-            <img class="m-moldura" src="assets/mockups/iphone.webp" alt="" width="707" height="1437" />
+            <div class="gi3d" data-gi3d>
+              <span class="gi3d-halo" aria-hidden="true"></span>
+              <!-- Sem WebGL: a GI em SVG fica no lugar -->
+              <div class="gi gi3d-reserva" data-gi style="--gi:62%">
+                <svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><g class="gi-olhos"><rect class="gi-olho" x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1"/><rect class="gi-olho" x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1"/></g></svg>
+              </div>
+            </div>
+            <div class="chip-dado chip-dado--a" data-chip><span class="chip-rotulo">Previsão de hoje</span><b>1.300 refeições</b></div>
+            <div class="chip-dado chip-dado--b" data-chip><span class="chip-rotulo"><i class="pt" style="--c:#e3241b"></i>Carne bovina</span><b>626 porções</b></div>
+            <div class="chip-dado chip-dado--c" data-chip><span class="chip-rotulo"><i class="pt" style="--c:#2f7a3b"></i>Vegana</span><b>352 porções</b></div>
           </div>
         </div>
       </div>
@@ -450,8 +445,8 @@
           </div>
         </div>
         <div class="totem-cena" data-reveal-escala>
-          <div class="tv" data-prof="24"><div class="tv-tela" data-wire="tv"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /></div><div class="tv-pe"></div></div>
-          <div class="ipad totem-ipad" data-tilt data-prof="-36"><div class="ipad-tela" data-wire="totem"><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /></div></div>
+          <div class="tv" data-prof="24"><div class="tv-tela" data-wire="tv"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /><span class="tv-ao-vivo" aria-hidden="true">Ao vivo</span></div><div class="tv-pe"></div></div>
+          <div class="ipad totem-ipad" data-tilt data-prof="-36"><div class="ipad-tela" data-wire="totem" data-totem><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /><span class="totem-marca" aria-hidden="true"></span><span class="totem-dedo" aria-hidden="true"></span><span class="totem-ok" aria-hidden="true"><svg><use href="#i-check"/></svg>Voto registrado</span></div></div>
         </div>
       </article>
 
