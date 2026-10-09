@@ -1062,46 +1062,8 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 }
 @media (prefers-reduced-motion: reduce) { .rota-viajante { display: none; } }
 
-/* ---------- Telas em wireframe (antes de revelar a captura real) ---------- */
+/* Telas do totem e da TV recebem camadas animadas por cima da captura */
 .tv-tela, .ipad-tela { position: relative; overflow: hidden; }
-.wire {
-  position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none;
-  background: radial-gradient(rgb(42 22 12 / .08) 1px, transparent 1px) 0 0 / 10px 10px var(--creme);
-}
-.wire i { position: absolute; display: block; border: 1.5px dashed rgb(227 36 27 / .55); border-radius: 6px; background: rgb(255 255 255 / .55); }
-.w-scan { position: absolute; left: 0; right: 0; top: 0; z-index: 7; height: 2px; background: var(--ketchup); box-shadow: 0 0 0 1px rgb(255 255 255 / .6), 0 0 18px 4px rgb(227 36 27 / .45); pointer-events: none; opacity: 0; }
-/* painel */
-.wire--painel .w-lado { left: 2%; top: 3%; bottom: 3%; width: 15%; background: rgb(42 22 12 / .06); }
-.wire--painel .w-topo { left: 20%; right: 2%; top: 3%; height: 8%; }
-.wire--painel .w-c1, .wire--painel .w-c2, .wire--painel .w-c3 { top: 15%; height: 22%; width: 24.5%; }
-.wire--painel .w-c1 { left: 20%; border-color: rgb(227 36 27 / .8); }
-.wire--painel .w-c2 { left: 46.7%; border-color: rgb(224 164 0 / .9); }
-.wire--painel .w-c3 { left: 73.4%; border-color: rgb(47 122 59 / .7); }
-.wire--painel .w-tab { left: 20%; right: 2%; top: 41%; bottom: 4%; }
-.wire--painel .w-l1, .wire--painel .w-l2, .wire--painel .w-l3 { left: 23%; height: 0; border-width: 1.5px 0 0; border-radius: 0; background: none; }
-.wire--painel .w-l1 { top: 52%; right: 6%; }
-.wire--painel .w-l2 { top: 64%; right: 18%; }
-.wire--painel .w-l3 { top: 76%; right: 10%; }
-/* app do celular */
-.wire--app .w-status { left: 8%; right: 8%; top: 3%; height: 3%; border-style: solid; background: rgb(42 22 12 / .06); }
-.wire--app .w-titulo { left: 8%; width: 62%; top: 10%; height: 6%; }
-.wire--app .w-card { left: 6%; right: 6%; height: 17%; }
-.wire--app .w-card--1 { top: 20%; border-color: rgb(227 36 27 / .8); background: rgb(227 36 27 / .08); }
-.wire--app .w-card--2 { top: 40%; }
-.wire--app .w-card--3 { top: 60%; }
-.wire--app .w-nav { left: 0; right: 0; bottom: 0; height: 9%; border-radius: 0; border-width: 1.5px 0 0; }
-/* TV do salão */
-.wire--tv { background: radial-gradient(rgb(255 255 255 / .08) 1px, transparent 1px) 0 0 / 10px 10px #1f140e; }
-.wire--tv .w-titulo { left: 4%; width: 46%; top: 7%; height: 12%; border-color: rgb(255 196 37 / .8); background: none; }
-.wire--tv .w-col { top: 26%; bottom: 7%; width: 29%; border-color: rgb(251 246 238 / .45); background: none; }
-.wire--tv .w-col--1 { left: 4%; } .wire--tv .w-col--2 { left: 35.5%; } .wire--tv .w-col--3 { left: 67%; }
-/* totem */
-.wire--totem .w-qr { left: 5%; top: 10%; width: 32%; aspect-ratio: 1; border-style: solid; background: repeating-linear-gradient(90deg, rgb(42 22 12 / .12) 0 6px, transparent 6px 12px); }
-.wire--totem .w-titulo--direita { left: 44%; right: 5%; top: 10%; height: 10%; }
-.wire--totem .w-op { left: 44%; right: 5%; height: 17%; }
-.wire--totem .w-op--1 { top: 26%; border-color: rgb(227 36 27 / .8); } .wire--totem .w-op--2 { top: 47%; border-color: rgb(224 164 0 / .9); } .wire--totem .w-op--3 { top: 68%; border-color: rgb(47 122 59 / .7); }
-/* O rodapé deixa espaço para a GI estacionada */
-.rodape { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
 
 /* =====================================================================
    Revisão de contraste, acessibilidade e proporção
@@ -1220,9 +1182,20 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 }
 .tv-ao-vivo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: ao-vivo 1.4s ease-in-out infinite; }
 @keyframes ao-vivo { 50% { opacity: .2; } }
-/* Esqueleto do totem acompanha a captura: QR à esquerda, opções à direita */
-.wire--totem .w-qr { left: 3.5%; top: 13%; width: 21.5%; }
-.wire--totem .w-titulo--direita { left: 45%; right: 18%; top: 7%; height: 8%; }
-.wire--totem .w-op { left: 45.1%; right: 3.4%; }
-.wire--totem .w-op--1 { top: 24.5%; height: 15%; } .wire--totem .w-op--2 { top: 41.1%; height: 16%; } .wire--totem .w-op--3 { top: 58.5%; height: 16%; }
 @media (prefers-reduced-motion: reduce) { .tv-ao-vivo::before { animation: none; } }
+
+/* ---------- Seção da GI: a mascote não some no vermelho ---------- */
+.gi-secao { background: radial-gradient(110% 90% at 78% 28%, var(--ketchup) 25%, var(--ketchup-fundo) 100%); }
+.gi-secao::before { opacity: .55; }
+.gi-palco { --gi-tam: min(56vw, 280px); --prato: calc(var(--gi-tam) * 1.28); padding-top: 12px; }
+.gi-palco::before {
+  content: ""; position: absolute; left: 50%; top: calc(12px + (var(--gi-tam) - var(--prato)) / 2); translate: -50% 0;
+  width: var(--prato); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #ffd35c, var(--mostarda) 55%, var(--mostarda-fundo));
+  box-shadow: 0 0 0 14px rgb(255 196 37 / .16), 0 40px 70px -30px rgb(60 5 0 / .7);
+}
+.gi-palco .gi {
+  position: relative; z-index: 1;
+  filter: drop-shadow(4px 0 0 var(--creme)) drop-shadow(-4px 0 0 var(--creme)) drop-shadow(0 4px 0 var(--creme)) drop-shadow(0 -4px 0 var(--creme)) drop-shadow(0 28px 34px rgb(60 5 0 / .5));
+}
+.gi-palco .chat { position: relative; z-index: 1; margin-top: 18px; }

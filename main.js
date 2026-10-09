@@ -705,8 +705,7 @@
       .from("[data-hero-mac]", { y: 70, rotateX: 18, scale: 0.94, opacity: 0, transformPerspective: 1400, transformOrigin: "50% 100%", duration: 1.4 }, 0.2)
       .from("[data-hero-iphone]", { x: -50, y: 90, rotate: -8, opacity: 0, duration: 1.3 }, 0.45)
       .from(".gi3d-halo", { scale: 0.4, opacity: 0, duration: 1 }, 0.7)
-      .from("[data-chip]", { y: 18, scale: 0.9, opacity: 0, stagger: 0.12, duration: 0.8, ease: "back.out(1.6)" }, 0.9)
-      .add(() => document.querySelectorAll(".hero [data-wire]").forEach((t) => t.__wire?.play()), 0.6);
+      .from("[data-chip]", { y: 18, scale: 0.9, opacity: 0, stagger: 0.12, duration: 0.8, ease: "back.out(1.6)" }, 0.9);
   }
 
   // Barra de progresso da leitura
@@ -925,7 +924,7 @@
       trigger: totem, start: "top 85%", end: "bottom 10%",
       onToggle: (st) => {
         if (!st.isActive) return tlTotem.pause();
-        if (!comecou) { comecou = true; gsap.delayedCall(2.4, () => tlTotem.play()); }
+        if (!comecou) { comecou = true; gsap.delayedCall(0.9, () => tlTotem.play()); }
         else tlTotem.play();
       },
     });
@@ -973,37 +972,6 @@
       trigger: lista, start: "top 88%", once: true,
       onEnter: () => gsap.to(itens, { y: 0, scale: 1, opacity: 1, stagger: 0.08, duration: 0.9, ease: "expo.out", clearProps: "transform" }),
     });
-  });
-
-  // ---------- Telas em wireframe: o esqueleto se desenha e a tela real é revelada ----------
-  const ESQUELETOS = {
-    painel: ["w-lado", "w-topo", "w-c1", "w-c2", "w-c3", "w-tab", "w-l1", "w-l2", "w-l3"],
-    app: ["w-status", "w-titulo", "w-card w-card--1", "w-card w-card--2", "w-card w-card--3", "w-nav"],
-    tv: ["w-titulo", "w-col w-col--1", "w-col w-col--2", "w-col w-col--3"],
-    totem: ["w-qr", "w-titulo w-titulo--direita", "w-op w-op--1", "w-op w-op--2", "w-op w-op--3"],
-  };
-  document.querySelectorAll("[data-wire]").forEach((tela) => {
-    const tipo = ESQUELETOS[tela.dataset.wire] ? tela.dataset.wire : "painel";
-    const wire = document.createElement("span");
-    wire.className = `wire wire--${tipo}`;
-    wire.setAttribute("aria-hidden", "true");
-    wire.innerHTML = ESQUELETOS[tipo].map((c) => `<i class="${c}"></i>`).join("");
-    const scan = document.createElement("b");
-    scan.className = "w-scan";
-    scan.setAttribute("aria-hidden", "true");
-    tela.append(wire, scan);
-    const partes = wire.querySelectorAll("i");
-    gsap.set(partes, { scaleX: 0, transformOrigin: "0 50%" });
-    gsap.set(scan, { opacity: 0 });
-    const noHero = !!tela.closest(".hero");
-    const tl = gsap.timeline(noHero ? { paused: true } : { scrollTrigger: { trigger: tela, start: "top 88%", once: true } });
-    if (noHero) tela.__wire = tl;
-    tl
-      .to(partes, { scaleX: 1, duration: 0.7, stagger: 0.07, ease: "power3.out" })
-      .set(scan, { opacity: 1, top: "0%" }, "+=0.35")
-      .fromTo(wire, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", duration: 1.2, ease: "power2.inOut" }, "<")
-      .to(scan, { top: "100%", duration: 1.2, ease: "power2.inOut" }, "<")
-      .add(() => { wire.remove(); scan.remove(); });
   });
 
   // ---------- Cartões e perfis (estado inicial já escondido: sem piscar) ----------
