@@ -159,6 +159,77 @@
     matchMedia("(min-width: 1081px)").addEventListener("change", (e) => e.matches && fecharMenu(false));
   }
 
+  // ---------- GI estacionada: atalho de navegação ----------
+  const assistente = document.querySelector("[data-assistente]");
+  const giBotao = document.querySelector("[data-assistente-botao]");
+  const giPainel = document.querySelector("[data-assistente-painel]");
+  let giAberta = false;
+  let giTimer = null;
+  function abrirGI() {
+    if (!giPainel || giAberta) return;
+    giAberta = true;
+    giPainel.hidden = false;
+    assistente.classList.add("is-aberto");
+    giBotao.setAttribute("aria-expanded", "true");
+    giBotao.setAttribute("aria-label", "Fechar a GI, a Estagiária");
+    dispatchEvent(new CustomEvent("gi:painel", { detail: { aberto: true } }));
+    const opcoes = giPainel.querySelectorAll(".assistente-opcoes a");
+    if (animar) {
+      assistente.classList.add("is-digitando");
+      gsap.fromTo(giPainel, { opacity: 0, scale: 0.86, y: 16 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" });
+      gsap.set(opcoes, { opacity: 0, x: 14 });
+      clearTimeout(giTimer);
+      giTimer = setTimeout(() => {
+        assistente.classList.remove("is-digitando");
+        gsap.fromTo("[data-assistente-msg]", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4 });
+        gsap.to(opcoes, { opacity: 1, x: 0, stagger: 0.06, duration: 0.45, delay: 0.15 });
+      }, 750);
+    }
+    giPainel.querySelector(".assistente-fechar")?.focus({ preventScroll: true });
+  }
+  function fecharGI(devolverFoco = true) {
+    if (!giPainel || !giAberta) return;
+    giAberta = false;
+    clearTimeout(giTimer);
+    assistente.classList.remove("is-aberto", "is-digitando");
+    giBotao.setAttribute("aria-expanded", "false");
+    giBotao.setAttribute("aria-label", "Abrir a GI, a Estagiária");
+    dispatchEvent(new CustomEvent("gi:painel", { detail: { aberto: false } }));
+    const esconder = () => { if (!giAberta) giPainel.hidden = true; };
+    if (animar) gsap.to(giPainel, { opacity: 0, scale: 0.9, y: 10, duration: 0.22, ease: "power2.in", onComplete: esconder });
+    else esconder();
+    if (devolverFoco) giBotao.focus({ preventScroll: true });
+  }
+  if (assistente && giBotao && giPainel) {
+    giBotao.addEventListener("click", () => {
+      dispatchEvent(new Event("gi:toque"));
+      if (!assistente.classList.contains("tem-3d") && animar) {
+        gsap.fromTo(giBotao.querySelector(".assistente-gi"), { y: 0 }, { y: -14, duration: 0.18, yoyo: true, repeat: 1, ease: "power2.out" });
+      }
+      giAberta ? fecharGI() : abrirGI();
+    });
+    giPainel.querySelector("[data-assistente-fechar]")?.addEventListener("click", () => fecharGI());
+    giPainel.querySelectorAll("[data-assistente-ir]").forEach((a) => a.addEventListener("click", () => fecharGI(false)));
+    addEventListener("keydown", (e) => { if (giAberta && e.key === "Escape") fecharGI(); });
+    document.addEventListener("pointerdown", (e) => { if (giAberta && !assistente.contains(e.target)) fecharGI(false); });
+    // Sem a GI 3D (sem WebGL ou com "reduzir movimento"), o botão aparece quando o hero sai da tela
+    const heroEl = document.querySelector(".hero");
+    if (heroEl && "IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => {
+        if (assistente.classList.contains("tem-3d")) return;
+        raiz.classList.toggle("gi-ancorada", !en.isIntersecting);
+      }, { threshold: 0, rootMargin: "0px 0px -35% 0px" }).observe(heroEl);
+    }
+    // Uma dica rápida na primeira vez que a GI estaciona
+    let dicaMostrada = false;
+    new MutationObserver(() => {
+      if (dicaMostrada || !raiz.classList.contains("gi-ancorada")) return;
+      dicaMostrada = true;
+      assistente.classList.add("mostra-dica");
+      setTimeout(() => assistente.classList.remove("mostra-dica"), 3200);
+    }).observe(raiz, { attributes: true, attributeFilter: ["class"] });
+  }
+
   // ---------- Âncoras ----------
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
@@ -257,7 +328,7 @@
     });
     pontos.forEach((btn, k) => {
       btn.classList.toggle("is-ativo", k === i);
-      btn.setAttribute("aria-selected", k === i ? "true" : "false");
+      btn.setAttribute("aria-pressed", k === i ? "true" : "false");
     });
     if (!animar) return;
     const cena = cenas[i];
@@ -399,6 +470,88 @@
     // Sem animação: mostra a tela de escolha do prato, parada
     const dia = demoSlides.findIndex((s) => s.dataset.slide === "dia");
     trocarDemoSlide(dia < 0 ? 0 : dia);
+  }
+
+  // ---------- Como funciona: rota pontilhada ligando a GI a cada etapa ----------
+  // O caminho é calculado pelas posições reais dos selos (desktop em zigue-zague,
+  // celular em coluna). Sem animação, a rota aparece inteira e as etapas, visíveis.
+  const fluxo = document.querySelector("[data-fluxo]");
+  const rota = {
+    svg: document.querySelector("[data-rota]"),
+    fantasma: document.querySelector("[data-rota-fantasma]"),
+    pontos: document.querySelector("[data-rota-pontos]"),
+    mascara: document.querySelector("[data-rota-mascara]"),
+    viajante: document.querySelector("[data-rota-viajante]"),
+    nos: [...document.querySelectorAll("[data-no]")],
+    total: 0,
+    marcos: [],
+    alcancados: [],
+    progresso: animar ? 0 : 1,
+  };
+  // Posição de layout (ignora transformações da animação)
+  function posicaoNoFluxo(el) {
+    let x = 0, y = 0, n = el;
+    while (n && n !== fluxo) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    return { x: x + el.offsetWidth / 2, y: y + el.offsetHeight / 2 };
+  }
+  function construirRota() {
+    if (!fluxo || !rota.svg || !rota.pontos) return;
+    const w = fluxo.offsetWidth, h = fluxo.offsetHeight;
+    rota.svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    const centro = fluxo.querySelector(".fluxo-centro");
+    const mascote = centro.querySelector(".gi") || centro;
+    const centrado = getComputedStyle(centro).position === "absolute";
+    const pm = posicaoNoFluxo(mascote);
+    const pts = [{ x: centrado ? w / 2 : pm.x, y: pm.y + mascote.offsetHeight / 2 - 6 }];
+    rota.nos.forEach((no) => pts.push(posicaoNoFluxo(no.querySelector(".no-selo"))));
+    let d = `M${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+    const prefixos = [];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i];
+      const k = Math.max(36, (b.y - a.y) * 0.55);
+      d += ` C${a.x.toFixed(1)} ${(a.y + k).toFixed(1)} ${b.x.toFixed(1)} ${(b.y - k).toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+      prefixos.push(d);
+    }
+    [rota.fantasma, rota.pontos, rota.mascara].forEach((p) => p.setAttribute("d", d));
+    rota.total = rota.pontos.getTotalLength() || 1;
+    const medidor = rota.fantasma.cloneNode();
+    rota.svg.appendChild(medidor);
+    rota.marcos = prefixos.map((pd) => { medidor.setAttribute("d", pd); return medidor.getTotalLength() / rota.total; });
+    medidor.remove();
+    rota.mascara.style.strokeDasharray = `${rota.total} ${rota.total}`;
+    aplicarRota(rota.progresso, true);
+  }
+  function aplicarRota(p, recalculo = false) {
+    if (!rota.total) return;
+    rota.mascara.style.strokeDashoffset = (rota.total * (1 - p)).toFixed(1);
+    const ponto = rota.pontos.getPointAtLength(rota.total * Math.min(1, Math.max(0, p)));
+    rota.viajante.setAttribute("transform", `translate(${ponto.x.toFixed(1)} ${ponto.y.toFixed(1)})`);
+    rota.viajante.style.opacity = p <= 0.001 ? 0 : 1;
+    rota.nos.forEach((no, i) => {
+      const chegou = p >= rota.marcos[i] - 0.004;
+      if (chegou === rota.alcancados[i] && !recalculo) return;
+      const mudou = chegou !== rota.alcancados[i];
+      rota.alcancados[i] = chegou;
+      no.classList.toggle("is-alcancado", chegou);
+      if (!animar || !mudou) return;
+      const selo = no.querySelector(".no-selo");
+      if (chegou) {
+        gsap.to(no, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.5)", overwrite: true });
+        gsap.to(selo, { scale: 1, rotate: 0, duration: 0.55, delay: 0.08, ease: "back.out(3)", overwrite: true });
+      } else {
+        gsap.to(no, { opacity: 0, y: 50, scale: 0.94, duration: 0.4, ease: "power2.in", overwrite: true });
+        gsap.to(selo, { scale: 0, rotate: -90, duration: 0.3, overwrite: true });
+      }
+    });
+  }
+  if (fluxo && rota.svg) {
+    if (animar) {
+      gsap.set(rota.nos, { opacity: 0, y: 50, scale: 0.94 });
+      gsap.set(rota.nos.map((n) => n.querySelector(".no-selo")), { scale: 0, rotate: -90 });
+    }
+    construirRota();
+    if ("ResizeObserver" in window) new ResizeObserver(() => construirRota()).observe(fluxo);
+    document.fonts?.ready.then(construirRota);
   }
 
   // ---------- Copiar, menu e controles prontos: daqui para baixo, só animação ----------
@@ -562,7 +715,7 @@
     });
   });
 
-  // ---------- Mouse: inclinação, botões magnéticos, brilho e cursor ----------
+  // ---------- Mouse: inclinação leve e botões magnéticos ----------
   if (!toque) {
     gsap.utils.toArray("[data-tilt], [data-tilt-leve]").forEach((el) => {
       const forca = el.hasAttribute("data-tilt-leve") ? 3 : 7;
@@ -585,32 +738,6 @@
       b.addEventListener("pointerleave", () => { x(0); y(0); });
     });
 
-    // Brilho que acompanha o mouse dentro dos cartões
-    addEventListener("pointermove", (e) => {
-      const el = e.target.closest?.(".cartao, .perfil, .no, .onde a");
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
-      el.style.setProperty("--my", `${e.clientY - r.top}px`);
-    }, { passive: true });
-
-    // Cursor com rastro
-    const cursor = document.createElement("div");
-    cursor.className = "cursor";
-    cursor.setAttribute("aria-hidden", "true");
-    document.body.appendChild(cursor);
-    const cx = gsap.quickTo(cursor, "x", { duration: 0.45, ease: "power3" });
-    const cy = gsap.quickTo(cursor, "y", { duration: 0.45, ease: "power3" });
-    addEventListener("pointermove", (e) => {
-      if (e.pointerType !== "mouse") return;
-      cursor.classList.add("is-visivel");
-      cx(e.clientX);
-      cy(e.clientY);
-      const t = e.target;
-      cursor.classList.toggle("is-alvo", !!t.closest?.("a, button"));
-      cursor.classList.toggle("is-escuro", !!t.closest?.(".dilema, .gi-secao, .acessos, .faixa, .cartao--escuro, .cartao--ketchup"));
-    }, { passive: true });
-    document.documentElement.addEventListener("pointerleave", () => cursor.classList.remove("is-visivel"));
   }
 
   // ---------- Dilema: fixado no desktop, automático no celular ----------
@@ -630,31 +757,15 @@
     return () => pararAutoDilema();
   });
 
-  // ---------- Como funciona: linhas tracejadas desenhadas na rolagem ----------
-  const svgFluxo = document.querySelector(".fluxo-linhas");
-  if (svgFluxo) {
-    const NS = "http://www.w3.org/2000/svg";
-    const defs = document.createElementNS(NS, "defs");
-    svgFluxo.prepend(defs);
-    gsap.utils.toArray("[data-linha]").forEach((linha, i) => {
-      const mascara = document.createElementNS(NS, "mask");
-      mascara.id = "m-linha-" + i;
-      mascara.setAttribute("maskUnits", "userSpaceOnUse");
-      const traco = linha.cloneNode();
-      traco.removeAttribute("data-linha");
-      traco.setAttribute("style", "stroke:#fff;stroke-width:8;stroke-dasharray:none;opacity:1;fill:none");
-      mascara.appendChild(traco);
-      defs.appendChild(mascara);
-      linha.setAttribute("mask", `url(#m-linha-${i})`);
-      const comp = traco.getTotalLength();
-      gsap.set(traco, { strokeDasharray: comp, strokeDashoffset: comp });
-      gsap.to(traco, { strokeDashoffset: 0, ease: "none", scrollTrigger: { trigger: "[data-fluxo]", start: `top+=${i * 140} 75%`, end: `top+=${i * 140 + 380} 45%`, scrub: 1 } });
+  // ---------- Como funciona: a rota se desenha com a rolagem ----------
+  if (fluxo && rota.svg) {
+    gsap.to(rota, {
+      progresso: 1, ease: "none",
+      scrollTrigger: { trigger: fluxo, start: "top 70%", end: "bottom 65%", scrub: 0.8 },
+      onUpdate: () => aplicarRota(rota.progresso),
     });
+    ScrollTrigger.addEventListener("refresh", construirRota);
   }
-  gsap.utils.toArray("[data-no]").forEach((no, i) => {
-    gsap.from(no, { y: 70, opacity: 0, scale: 0.92, rotate: i % 2 ? 6 : -6, duration: 1.1, ease: "back.out(1.4)", scrollTrigger: { trigger: no, start: "top 85%" } });
-    gsap.from(no.querySelector(".no-selo"), { scale: 0, rotate: -90, duration: 0.6, ease: "back.out(2.5)", delay: 0.35, scrollTrigger: { trigger: no, start: "top 85%" } });
-  });
 
   // ---------- App do aluno: a demo roda enquanto está na tela ----------
   if (demoBox) {
@@ -694,7 +805,6 @@
     scrollTrigger: { trigger: "[data-chat]", start: "top 80%" },
   });
   gsap.from(".gi-palco .gi", { scale: 0.6, rotate: -12, opacity: 0, duration: 1.3, ease: "elastic.out(1, .6)", scrollTrigger: { trigger: ".gi-palco", start: "top 80%" } });
-  gsap.from(".gi-acoes span", { y: 20, opacity: 0, stagger: 0.08, duration: 0.7, scrollTrigger: { trigger: ".gi-acoes", start: "top 88%" } });
 
   // ---------- Antes × depois ----------
   gsap.utils.toArray("[data-comp]").forEach((linha) => {
@@ -702,6 +812,44 @@
     tl.from(linha, { y: 30, opacity: 0, duration: 0.6 })
       .to(linha.querySelector(".comp-antes span"), { "--risco": "100%", duration: 0.6, ease: "power2.inOut" }, 0.3)
       .from(linha.querySelector(".comp-depois"), { x: 40, opacity: 0, duration: 0.7 }, 0.55);
+  });
+
+  // ---------- Listas em cascata: cada item entra na sua vez ----------
+  document.querySelectorAll("[data-cascata]").forEach((lista) => {
+    const itens = [...lista.children];
+    gsap.set(itens, { y: 44, scale: 0.96, opacity: 0 });
+    ScrollTrigger.create({
+      trigger: lista, start: "top 88%", once: true,
+      onEnter: () => gsap.to(itens, { y: 0, scale: 1, opacity: 1, stagger: 0.08, duration: 0.9, ease: "expo.out", clearProps: "transform" }),
+    });
+  });
+
+  // ---------- Telas em wireframe: o esqueleto se desenha e a tela real é revelada ----------
+  const ESQUELETOS = {
+    painel: ["w-lado", "w-topo", "w-c1", "w-c2", "w-c3", "w-tab", "w-l1", "w-l2", "w-l3"],
+    app: ["w-status", "w-titulo", "w-card w-card--1", "w-card w-card--2", "w-card w-card--3", "w-nav"],
+    tv: ["w-titulo", "w-col w-col--1", "w-col w-col--2", "w-col w-col--3"],
+    totem: ["w-qr", "w-titulo w-titulo--direita", "w-op w-op--1", "w-op w-op--2", "w-op w-op--3"],
+  };
+  document.querySelectorAll("[data-wire]").forEach((tela) => {
+    const tipo = ESQUELETOS[tela.dataset.wire] ? tela.dataset.wire : "painel";
+    const wire = document.createElement("span");
+    wire.className = `wire wire--${tipo}`;
+    wire.setAttribute("aria-hidden", "true");
+    wire.innerHTML = ESQUELETOS[tipo].map((c) => `<i class="${c}"></i>`).join("");
+    const scan = document.createElement("b");
+    scan.className = "w-scan";
+    scan.setAttribute("aria-hidden", "true");
+    tela.append(wire, scan);
+    const partes = wire.querySelectorAll("i");
+    gsap.set(partes, { scaleX: 0, transformOrigin: "0 50%" });
+    gsap.set(scan, { opacity: 0 });
+    gsap.timeline({ scrollTrigger: { trigger: tela, start: "top 88%", once: true } })
+      .to(partes, { scaleX: 1, duration: 0.7, stagger: 0.07, ease: "power3.out" })
+      .set(scan, { opacity: 1, top: "0%" }, "+=0.35")
+      .fromTo(wire, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(100% 0% 0% 0%)", duration: 1.2, ease: "power2.inOut" }, "<")
+      .to(scan, { top: "100%", duration: 1.2, ease: "power2.inOut" }, "<")
+      .add(() => { wire.remove(); scan.remove(); });
   });
 
   // ---------- Cartões e perfis (estado inicial já escondido: sem piscar) ----------

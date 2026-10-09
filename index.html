@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>RU-FOOD · Gestão de Restaurantes Universitários</title>
-  <meta name="description" content="Previsão de consumo, compras, estoque e contrato do Restaurante Universitário numa plataforma só: app do aluno, totem, painel web e desktop com IA local. Ambiente de homologação aberto para testes." />
-  <meta name="theme-color" content="#fbf6ee" />
+  <meta name="description" content="Previsão de consumo, compras, estoque e contrato do Restaurante Universitário numa plataforma só: app do aluno, totem, painel web e desktop com IA local." />
+  <meta name="theme-color" content="#e3241b" />
   <meta property="og:title" content="RU-FOOD · Nem falta, nem sobra." />
-  <meta property="og:description" content="A plataforma de gestão do RU está pronta para testes. App do aluno, totem, painel web e desktop com IA local." />
+  <meta property="og:description" content="A cozinha do RU produz, compra e presta contas pela demanda real. App do aluno, totem, painel web e desktop com IA local." />
   <meta property="og:image" content="assets/telas/adm-painel.webp" />
   <link rel="icon" href="assets/marca/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -104,36 +104,32 @@
     <!-- ============ HERO ============ -->
     <section class="hero" aria-labelledby="hero-titulo">
       <canvas class="hero-shader" data-shader aria-hidden="true"></canvas>
-      <div class="grade" aria-hidden="true"></div>
+      <div class="pontos pontos--hero" aria-hidden="true"></div>
 
       <div class="hero-in" id="conteudo">
         <div class="hero-texto">
-          <a href="#acessos" class="aviso" data-hero-in>
-            <span class="aviso-ponto" aria-hidden="true"></span>
-            <span><strong>Ambiente de homologação aberto.</strong> A plataforma de gestão do RU está pronta para testes.</span>
-            <svg class="aviso-seta" aria-hidden="true"><use href="#i-seta"/></svg>
-          </a>
-
+          <p class="hero-sobre" data-hero-in>Gestão de Restaurante Universitário</p>
           <h1 id="hero-titulo" class="hero-titulo">
             <span class="linha"><span data-hero-linha>Nem falta.</span></span>
             <span class="linha"><span data-hero-linha>Nem sobra.</span></span>
-            <span class="linha"><span data-hero-linha class="ketchup">Na medida.</span></span>
+            <span class="linha"><span data-hero-linha class="mostarda">Na medida.</span></span>
           </h1>
           <p class="hero-sub" data-hero-in>
-            O aluno escolhe o prato em dois toques, sem cadastro. A cozinha produz, compra e presta contas
-            pela demanda real, no <b>app</b>, no <b>totem</b>, na <b>web</b> e no <b>computador</b>.
+            O aluno escolhe o prato em dois toques, sem cadastro. Antes de acender o fogão, a cozinha já sabe
+            quanto preparar de cada proteína, e compra, estoca e presta contas pela demanda real.
           </p>
           <div class="hero-ctas" data-hero-in>
-            <a href="#acessos" class="botao botao--p botao--g" data-magnetic>Conhecer por dentro <svg aria-hidden="true"><use href="#i-seta"/></svg></a>
+            <a href="#acessos" class="botao botao--mostarda botao--g" data-magnetic>Conhecer por dentro <svg aria-hidden="true"><use href="#i-seta"/></svg></a>
             <a href="https://rufood.vercel.app" target="_blank" rel="noopener" class="botao botao--s botao--g" data-magnetic>Abrir app do aluno <svg aria-hidden="true"><use href="#i-externo"/></svg></a>
           </div>
           <ul class="hero-selos" data-hero-in aria-label="Destaques">
-            <li>UFGD, Dourados</li><li>TR 47/2023</li><li>LGPD por design</li><li>4 portais integrados</li>
+            <li>UFGD, Dourados</li><li>Feito sobre o TR 47/2023</li><li>LGPD por design</li><li>App, totem, web e desktop</li>
           </ul>
         </div>
 
         <div class="hero-palco" aria-hidden="true">
           <div class="gi3d" data-gi3d>
+            <span class="gi3d-halo" aria-hidden="true"></span>
             <!-- Sem WebGL: a GI em SVG fica no lugar -->
             <div class="gi gi--grande gi3d-reserva" data-gi style="--gi:min(52vw,320px)">
               <svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><g class="gi-olhos"><rect class="gi-olho" x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1"/><rect class="gi-olho" x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1"/></g></svg>
@@ -151,11 +147,11 @@
       <div class="palco" data-palco>
         <div class="palco-cena" data-palco-cena>
           <div class="m-mac palco-mac">
-            <div class="m-mac-tela"><img src="assets/telas/adm-painel.webp" alt="Painel de gestão do RU-FOOD com as proteínas de hoje" width="1920" height="1200" fetchpriority="high" /></div>
+            <div class="m-mac-tela" data-wire="painel"><img src="assets/telas/adm-painel.webp" alt="Painel de gestão do RU-FOOD com as proteínas de hoje" width="1920" height="1200" fetchpriority="high" /></div>
             <img class="m-moldura" src="assets/mockups/macbook.webp" alt="" width="1803" height="1037" />
           </div>
           <div class="m-iphone palco-iphone" data-tilt>
-            <div class="m-iphone-tela">
+            <div class="m-iphone-tela" data-wire="app">
               <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
               <img src="assets/telas/cel-dia.webp" alt="App do aluno: escolha do prato principal" width="780" height="1594" />
             </div>
@@ -168,15 +164,15 @@
     <!-- Faixa infinita: velocidade e sentido seguem a rolagem -->
     <div class="faixa" aria-hidden="true" data-faixa>
       <div class="faixa-trilho" data-faixa-trilho>
-        <span>Nem falta</span><i></i><span>Nem sobra</span><i></i><span class="ketchup">Na medida</span><i></i>
-        <span>App do aluno</span><i></i><span>Totem de fila</span><i></i><span>Painel web</span><i></i><span>Desktop com IA local</span><i></i>
+        <span>Previsão por proteína</span><i></i><span class="ketchup">2 toques para escolher</span><i></i><span>Sem cadastro do aluno</span><i></i>
+        <span>14 dias de estoque mínimo</span><i></i><span class="ketchup">13 relatórios prontos</span><i></i><span>Aprovação em 3 instâncias</span><i></i><span>LGPD por design</span><i></i>
       </div>
     </div>
 
     <!-- ============ POR QUE ============ -->
     <section class="secao porque" id="porque">
       <div class="porque-in">
-        <h2 class="titulo-ancora" data-split>Por que<br /><span class="ketchup">RU-FOOD</span></h2>
+        <h2 class="titulo-ancora letreiro" data-split>Por que<br /><span class="ketchup">RU-FOOD?</span></h2>
         <div class="porque-texto">
           <h3 class="h3-grande" data-reveal>Porque cozinha coletiva não pode funcionar no chute.</h3>
           <p data-ler>
@@ -222,11 +218,11 @@
               <p>Produção igual à demanda: porções e quilos por proteína, calculados com as escolhas do dia e o histórico real.</p>
             </div>
           </div>
-          <div class="dilema-pontos" role="tablist" aria-label="Passos do dilema">
-            <button type="button" class="dilema-ponto is-ativo" data-ir-passo="0" role="tab" aria-selected="true" aria-label="Passo 1: O dilema"></button>
-            <button type="button" class="dilema-ponto" data-ir-passo="1" role="tab" aria-selected="false" aria-label="Passo 2: Faltou prato"></button>
-            <button type="button" class="dilema-ponto" data-ir-passo="2" role="tab" aria-selected="false" aria-label="Passo 3: Sobrou comida"></button>
-            <button type="button" class="dilema-ponto" data-ir-passo="3" role="tab" aria-selected="false" aria-label="Passo 4: Conta equilibrada"></button>
+          <div class="dilema-pontos" role="group" aria-label="Passos do dilema">
+            <button type="button" class="dilema-ponto is-ativo" data-ir-passo="0" aria-pressed="true" aria-label="Passo 1: O dilema"></button>
+            <button type="button" class="dilema-ponto" data-ir-passo="1" aria-pressed="false" aria-label="Passo 2: Faltou prato"></button>
+            <button type="button" class="dilema-ponto" data-ir-passo="2" aria-pressed="false" aria-label="Passo 3: Sobrou comida"></button>
+            <button type="button" class="dilema-ponto" data-ir-passo="3" aria-pressed="false" aria-label="Passo 4: Conta equilibrada"></button>
           </div>
         </div>
         <div class="dilema-vitrine" data-dilema-vitrine aria-live="polite">
@@ -316,13 +312,13 @@
               <div class="dilema-info-alerta dilema-info-alerta--sucesso">
                 <div class="dilema-selo-carimbo dilema-selo-carimbo--ok">
                   <svg aria-hidden="true"><use href="#i-check"/></svg>
-                  <span>100% NA MEDIDA</span>
+                  <span>NA MEDIDA</span>
                   <small>PREVISÃO CALIBRADA</small>
                 </div>
                 <ul class="dilema-consequencias dilema-consequencias--ok">
                   <li><svg aria-hidden="true"><use href="#i-check"/></svg> Amostra de escolha do aluno no celular</li>
                   <li><svg aria-hidden="true"><use href="#i-check"/></svg> Histórico da catraca cruzado em tempo real</li>
-                  <li><svg aria-hidden="true"><use href="#i-check"/></svg> Zero multas, zero filas e zero desperdício</li>
+                  <li><svg aria-hidden="true"><use href="#i-check"/></svg> Menos multa, menos fila e menos comida no lixo</li>
                 </ul>
               </div>
             </div>
@@ -340,11 +336,12 @@
       </div>
 
       <div class="fluxo" data-fluxo>
-        <svg class="fluxo-linhas" viewBox="0 0 1200 900" preserveAspectRatio="none" aria-hidden="true">
-          <path data-linha d="M600 70 C 600 200, 260 160, 250 300" />
-          <path data-linha d="M600 70 C 600 260, 950 260, 950 430" />
-          <path data-linha d="M250 380 C 250 560, 330 580, 330 700" />
-          <path data-linha d="M950 520 C 950 640, 870 680, 870 760" />
+        <!-- Rota pontilhada: desenhada pelo JS ligando a GI aos selos de cada etapa -->
+        <svg class="fluxo-rota" aria-hidden="true" data-rota>
+          <defs><mask id="rota-mascara" maskUnits="userSpaceOnUse"><path data-rota-mascara /></mask></defs>
+          <path class="rota-fantasma" data-rota-fantasma />
+          <path class="rota-pontos" data-rota-pontos mask="url(#rota-mascara)" />
+          <g class="rota-viajante" data-rota-viajante><circle class="rota-viajante-halo" r="18" /><circle r="10" /><circle class="rota-viajante-miolo" r="3.5" /></g>
         </svg>
         <div class="fluxo-centro" data-reveal aria-hidden="true">
           <div class="gi" data-gi style="--gi:84px"><svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><g class="gi-olhos"><rect class="gi-olho" x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1"/><rect class="gi-olho" x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1"/></g></svg></div>
@@ -380,16 +377,17 @@
           </li>
         </ol>
       </div>
+      <p class="fluxo-nota" data-reveal><b>E se pouca gente responder?</b> A previsão continua de pé: a base é o histórico da catraca, e a amostra do dia só ajusta a proporção entre as proteínas.</p>
     </section>
 
     <!-- ============ PLATAFORMA ============ -->
     <section class="plataforma" id="plataforma">
       <div class="cabeca cabeca--centro">
         <p class="sobrelinha">A plataforma</p>
-        <h2 class="h1" data-split>Quatro portais.<br /><span class="ketchup">Um só restaurante.</span></h2>
+        <h2 class="h1 letreiro" data-split>Quatro portais.<br /><span class="ketchup">Um só restaurante.</span></h2>
         <p class="cabeca-sub" data-reveal>Tudo sincronizado em tempo real, na tela certa para cada pessoa.</p>
       </div>
-      <ul class="onde" data-reveal>
+      <ul class="onde" data-cascata>
         <li><a href="#p-aluno"><svg aria-hidden="true"><use href="#i-celular"/></svg><b>Celular</b><span>O aluno escolhe o prato e avalia, sem cadastro e anônimo. Dá para instalar como app.</span></a></li>
         <li><a href="#p-gestao"><svg aria-hidden="true"><use href="#i-monitor"/></svg><b>Web</b><span>Painel de gestão no navegador.</span></a></li>
         <li><a href="#p-desktop"><svg aria-hidden="true"><use href="#i-chip"/></svg><b>Desktop</b><span>O mesmo painel no Windows e no Mac, com a IA local.</span></a></li>
@@ -402,7 +400,7 @@
           <p class="sobrelinha">App do aluno</p>
           <h3 class="h2" data-split>Escolha seu prato. <span class="ketchup">A gente garante.</span></h3>
           <p data-reveal>Um app leve, sem cadastro e sem senha, que abre no navegador e pode ser instalado na tela inicial. O aluno vê a semana, escolhe o prato principal e confere os selos de alergênicos.</p>
-          <ul class="lista-check" data-reveal>
+          <ul class="lista-check" data-cascata>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Sem cadastro: nenhum nome, matrícula ou e-mail</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Uma resposta por refeição, com trava por aparelho</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Preferência padrão: a semana se preenche sozinha</li>
@@ -441,7 +439,7 @@
           <p class="sobrelinha">Totem de fila e modo TV</p>
           <h3 class="h2" data-split>Quem esqueceu o celular <span class="ketchup">também vota.</span></h3>
           <p data-reveal>Um tablet na entrada da fila mostra o QR Code do app e aceita o voto por toque, em menos de 15 segundos. Na TV do salão, o cardápio do dia aparece com a gramatura mínima de cada preparação.</p>
-          <ul class="lista-check" data-reveal>
+          <ul class="lista-check" data-cascata>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Ativado pelo painel, com código guardado no aparelho</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Confirmação visual e volta sozinho ao início</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Recados e alertas aparecem no app, no totem e na TV</li>
@@ -452,8 +450,8 @@
           </div>
         </div>
         <div class="totem-cena" data-reveal-escala>
-          <div class="tv" data-prof="24"><div class="tv-tela"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /></div><div class="tv-pe"></div></div>
-          <div class="ipad totem-ipad" data-tilt data-prof="-36"><div class="ipad-tela"><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /></div></div>
+          <div class="tv" data-prof="24"><div class="tv-tela" data-wire="tv"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /></div><div class="tv-pe"></div></div>
+          <div class="ipad totem-ipad" data-tilt data-prof="-36"><div class="ipad-tela" data-wire="totem"><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /></div></div>
         </div>
       </article>
 
@@ -463,7 +461,7 @@
           <div class="gestao-texto">
             <p class="sobrelinha">Painel de gestão na web</p>
             <h3 class="h2">O restaurante inteiro <span class="ketchup">numa tela só.</span></h3>
-            <ol class="gestao-passos" data-gestao-passos>
+            <ol class="gestao-passos" data-gestao-passos data-cascata>
               <li class="is-ativo"><button type="button" data-ir="0"><span>Ao vivo</span>Proteínas de hoje: escolhas, previsto e produzido, atualizando na hora.</button></li>
               <li><button type="button" data-ir="1"><span>Previsão</span>Porções e quilos por proteína para a semana, com margem de segurança.</button></li>
               <li><button type="button" data-ir="2"><span>Cardápios</span>Editor com o verificador das regras do contrato e aprovação em três instâncias.</button></li>
@@ -474,7 +472,7 @@
           </div>
           <div class="gestao-palco">
             <div class="m-mac" data-tilt-leve>
-              <div class="m-mac-tela" data-telas>
+              <div class="m-mac-tela" data-telas data-wire="painel">
                 <img class="is-ativa" src="assets/telas/adm-painel.webp" alt="Painel ao vivo das proteínas" width="1920" height="1200" loading="lazy" />
                 <img src="assets/telas/adm-previsao.webp" alt="Previsão de consumo da semana" width="1920" height="1200" loading="lazy" />
                 <img src="assets/telas/adm-cardapios.webp" alt="Cardápios com verificador do contrato" width="1920" height="1200" loading="lazy" />
@@ -495,7 +493,7 @@
           <p class="sobrelinha">Versão desktop para Windows e Mac</p>
           <h3 class="h2" data-split>A inteligência fica <span class="ketchup">no computador do RU.</span></h3>
           <p data-reveal>O instalador abre o painel como um aplicativo e liga a IA local. Ela roda só no computador: os documentos não saem da máquina e nenhuma IA externa é usada. Na web e no celular, o sistema funciona sem IA.</p>
-          <ul class="lista-check" data-reveal>
+          <ul class="lista-check" data-cascata>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Mesmo banco de dados da web e do celular</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Busca no TR, nos contratos e nos protocolos</li>
             <li><svg aria-hidden="true"><use href="#i-check"/></svg>Windows 10/11 (64 bits) e macOS 12 ou mais novo</li>
@@ -509,7 +507,7 @@
           <div class="foto-mac-in">
             <div class="foto-mac-quadro">
               <img class="foto-mac-foto" src="assets/mockups/mao-macbook.webp" alt="" width="736" height="1104" loading="lazy" />
-              <div class="foto-mac-tela"><img src="assets/telas/adm-ia.webp" alt="Tela de IA local na versão desktop do RU-FOOD" width="1920" height="1200" loading="lazy" /><i class="foto-mac-notch"></i></div>
+              <div class="foto-mac-tela" data-wire="painel"><img src="assets/telas/adm-ia.webp" alt="Tela de IA local na versão desktop do RU-FOOD" width="1920" height="1200" loading="lazy" /><i class="foto-mac-notch"></i></div>
             </div>
           </div>
           <img class="foto-mac-sticker" data-prof="-70" src="assets/stickers/decisoes.webp" alt="" width="200" height="200" loading="lazy" />
@@ -523,9 +521,9 @@
       <div class="gi-secao-in">
         <div class="gi-secao-texto">
           <p class="sobrelinha sobrelinha--clara">Conheça a GI</p>
-          <h2 class="titulo-ancora titulo-ancora--claro" data-split>Tá com dúvida?<br /><span class="mostarda">Pede pra GI.</span></h2>
+          <h2 class="titulo-ancora titulo-ancora--claro letreiro" data-split>Tá com dúvida?<br /><span class="mostarda">Pede pra GI.</span></h2>
           <p class="gi-lead" data-reveal>A tarefa é chata e complexa? <b>A Estagiária te ajuda.</b> A GI mora no canto do painel e responde com os dados do próprio sistema: compras, estoque, cardápio, previsão e regras do contrato.</p>
-          <div class="gi-acoes" data-reveal>
+          <div class="gi-acoes" data-cascata>
             <span><b>/comprar</b> O que comprar, com prazo</span>
             <span><b>/riscos</b> Insumos que vão faltar</span>
             <span><b>/validade</b> Lotes que vencem em 7 dias</span>
@@ -562,27 +560,27 @@
       <div class="comparativo" role="table" aria-label="Operação tradicional comparada à operação com RU-FOOD">
         <div class="comp-cab" role="row"><span role="columnheader">Dimensão</span><span role="columnheader">Operação tradicional</span><span role="columnheader">Com RU-FOOD</span></div>
         <div class="comp-linha" role="row" data-comp>
-          <h3 role="rowheader">Previsão de proteína</h3>
+          <div role="rowheader"><h3>Previsão de proteína</h3></div>
           <p class="comp-antes" role="cell"><svg aria-hidden="true"><use href="#i-x"/></svg><span>Estimativa no olho, com falta recorrente ou sobra alta</span></p>
           <p class="comp-depois" role="cell"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Amostra em tempo real cruzada com o histórico da catraca</span></p>
         </div>
         <div class="comp-linha" role="row" data-comp>
-          <h3 role="rowheader">Aprovação de cardápio</h3>
+          <div role="rowheader"><h3>Aprovação de cardápio</h3></div>
           <p class="comp-antes" role="cell"><svg aria-hidden="true"><use href="#i-x"/></svg><span>Trocas por e-mail, sujeitas a glosa e sem histórico</span></p>
           <p class="comp-depois" role="cell"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Fluxo em três instâncias: Nutri, Gestor e Fiscal</span></p>
         </div>
         <div class="comp-linha" role="row" data-comp>
-          <h3 role="rowheader">Gestão de estoque</h3>
+          <div role="rowheader"><h3>Gestão de estoque</h3></div>
           <p class="comp-antes" role="cell"><svg aria-hidden="true"><use href="#i-x"/></svg><span>Compras avulsas, com risco de validade vencida e ruptura</span></p>
           <p class="comp-depois" role="cell"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Lotes FEFO e cobertura mínima preventiva de 14 dias</span></p>
         </div>
         <div class="comp-linha" role="row" data-comp>
-          <h3 role="rowheader">Segurança RDC 216</h3>
+          <div role="rowheader"><h3>Segurança RDC 216</h3></div>
           <p class="comp-antes" role="cell"><svg aria-hidden="true"><use href="#i-x"/></svg><span>Planilhas de papel preenchidas à mão, ou esquecidas</span></p>
           <p class="comp-depois" role="cell"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Registro digital de temperaturas e ações corretivas</span></p>
         </div>
         <div class="comp-linha" role="row" data-comp>
-          <h3 role="rowheader">Auditoria de IMR</h3>
+          <div role="rowheader"><h3>Auditoria de IMR</h3></div>
           <p class="comp-antes" role="cell"><svg aria-hidden="true"><use href="#i-x"/></svg><span>Difícil contestar as glosas da fiscalização</span></p>
           <p class="comp-depois" role="cell"><svg aria-hidden="true"><use href="#i-check"/></svg><span>Dossiê diário com evidências e autoavaliação do IMR</span></p>
         </div>
@@ -634,21 +632,21 @@
       <div class="acessos-in">
         <div class="acessos-topo">
           <div class="cabeca cabeca--claro">
-            <p class="aviso aviso--claro"><span class="aviso-ponto" aria-hidden="true"></span><span><strong>Ambiente de homologação.</strong> Os dados que estão lá agora são de teste.</span></p>
-            <h2 class="h1" data-split>Conheça por dentro.<br /><span class="mostarda">Escolha seu perfil.</span></h2>
-            <ol class="passos" data-reveal>
+            <p class="sobrelinha sobrelinha--clara">Acesso à plataforma</p>
+            <h2 class="h1 letreiro" data-split>Conheça por dentro.<br /><span class="mostarda">Escolha seu perfil.</span></h2>
+            <ol class="passos" data-cascata>
               <li><span>1</span>Copie o e-mail do perfil ou toque em acessar: ele já chega preenchido.</li>
-              <li><span>2</span>Digite a senha de homologação, enviada a você à parte.</li>
+              <li><span>2</span>Digite a senha que a equipe RU-FOOD enviou só para você.</li>
               <li><span>3</span>Abra também o app do aluno no celular e escolha um prato.</li>
             </ol>
           </div>
           <div class="acessos-telas" aria-hidden="true">
             <div class="m-mac acessos-mac">
-              <div class="m-mac-tela"><img src="assets/telas/adm-entrar.webp" alt="" width="1920" height="1200" loading="lazy" /></div>
+              <div class="m-mac-tela" data-wire="painel"><img src="assets/telas/adm-entrar.webp" alt="" width="1920" height="1200" loading="lazy" /></div>
               <img class="m-moldura" src="assets/mockups/macbook.webp" alt="" width="1803" height="1037" loading="lazy" />
             </div>
             <div class="m-iphone acessos-iphone" data-prof="-40">
-              <div class="m-iphone-tela">
+              <div class="m-iphone-tela" data-wire="app">
                 <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
                 <img src="assets/telas/cel-entrar.webp" alt="" width="780" height="1594" loading="lazy" />
               </div>
@@ -709,8 +707,8 @@
         </div>
 
         <div class="notas">
-          <p class="nota-senha" data-reveal><svg aria-hidden="true"><use href="#i-cadeado"/></svg><span><b>A senha vai à parte.</b> Ela é enviada de forma individual e confidencial para cada pessoa que vai testar.</span></p>
-          <p class="nota-senha nota-senha--mostarda" data-reveal><svg aria-hidden="true"><use href="#i-megafone"/></svg><span><b>Agora é hora de testar!</b> Mexa à vontade e mande print do que achar estranho: tudo pode ser ajustado na parametrização.</span></p>
+          <p class="nota-senha" data-reveal><svg aria-hidden="true"><use href="#i-cadeado"/></svg><span><b>Cada perfil, uma senha.</b> Ela é individual e chega de forma confidencial para cada pessoa da equipe.</span></p>
+          <p class="nota-senha nota-senha--mostarda" data-reveal><svg aria-hidden="true"><use href="#i-megafone"/></svg><span><b>Viu algo para ajustar?</b> Mande um print. Regras do contrato, cardápios e limites mudam na parametrização, sem mexer no código.</span></p>
         </div>
       </div>
       <p class="sr" aria-live="polite" data-anuncio></p>
@@ -720,23 +718,23 @@
     <section class="final">
       <div class="final-texto">
         <img class="final-sticker" src="assets/stickers/ta-na-mesa.webp" alt="" width="260" height="260" loading="lazy" data-reveal-escala />
-        <h2 class="titulo-ancora titulo-letreiro" data-split>Tá na mesa.</h2>
-        <p class="cabeca-sub" data-reveal>O RU-FOOD está no ar e pronto para a validação com a equipe do restaurante e a fiscalização.</p>
+        <h2 class="titulo-ancora titulo-letreiro letreiro" data-split>Tá na mesa.</h2>
+        <p class="cabeca-sub" data-reveal>O RU-FOOD está no ar. Entre com o seu perfil e veja previsão, cardápio, compras e estoque do restaurante numa tela só.</p>
         <div class="hero-ctas" data-reveal>
-          <a href="#acessos" class="botao botao--p botao--g" data-magnetic>Conhecer por dentro <svg aria-hidden="true"><use href="#i-seta"/></svg></a>
+          <a href="#acessos" class="botao botao--p botao--g" data-magnetic>Entrar com meu perfil <svg aria-hidden="true"><use href="#i-seta"/></svg></a>
           <a href="https://rufood.vercel.app" target="_blank" rel="noopener" class="botao botao--s botao--g" data-magnetic>Abrir app do aluno <svg aria-hidden="true"><use href="#i-externo"/></svg></a>
         </div>
       </div>
       <div class="dupla-telefones" data-dupla aria-hidden="true">
         <div class="m-iphone dupla-iphone dupla-iphone--atras" data-tilt-leve data-prof="44">
-          <div class="m-iphone-tela">
+          <div class="m-iphone-tela" data-wire="app">
             <div class="barra-status" data-escuro><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
             <img src="assets/telas/cel-bemvindo.webp" alt="App do aluno - Boas-vindas" width="780" height="1594" loading="lazy" />
           </div>
           <img class="m-moldura" src="assets/mockups/iphone.webp" alt="" width="707" height="1437" loading="lazy" />
         </div>
         <div class="m-iphone dupla-iphone dupla-iphone--frente" data-tilt data-prof="-30">
-          <div class="m-iphone-tela">
+          <div class="m-iphone-tela" data-wire="app">
             <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
             <img src="assets/telas/cel-semana.webp" alt="App do aluno - Sua semana no RU" width="780" height="1594" loading="lazy" />
           </div>
@@ -745,6 +743,35 @@
       </div>
     </section>
   </main>
+
+  <!-- GI estacionada no canto: abre um atalho de navegação, como no painel -->
+  <div class="assistente" data-assistente>
+    <div class="assistente-painel" id="assistente-painel" role="dialog" aria-modal="false" aria-labelledby="assistente-titulo" hidden data-assistente-painel>
+      <header class="assistente-topo">
+        <span class="assistente-avatar" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><rect x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1" fill="#1c1514"/><rect x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1" fill="#1c1514"/></svg></span>
+        <div>
+          <p class="assistente-nome" id="assistente-titulo">GI, a Estagiária</p>
+          <p class="assistente-status"><span aria-hidden="true"></span>Simulação do assistente do painel</p>
+        </div>
+        <button type="button" class="assistente-fechar" aria-label="Fechar a GI" data-assistente-fechar><svg aria-hidden="true"><use href="#i-x"/></svg></button>
+      </header>
+      <div class="assistente-conversa" data-assistente-conversa>
+        <p class="assistente-msg" data-assistente-msg>Oi! No painel eu respondo com os dados do próprio RU. Aqui, eu te levo direto ao ponto. Pra onde vamos?</p>
+        <div class="assistente-digitando" aria-hidden="true" data-assistente-digitando><i></i><i></i><i></i></div>
+      </div>
+      <nav class="assistente-opcoes" aria-label="Atalhos da GI">
+        <a href="#dilema" data-assistente-ir><b>/problema</b><span>Por que errar a produção custa caro</span></a>
+        <a href="#como" data-assistente-ir><b>/como</b><span>Como a escolha vira previsão</span></a>
+        <a href="#plataforma" data-assistente-ir><b>/portais</b><span>App, totem, web e desktop</span></a>
+        <a href="#governanca" data-assistente-ir><b>/modulos</b><span>Do cardápio à auditoria</span></a>
+        <a href="#acessos" data-assistente-ir><b>/acessar</b><span>Entrar com o seu perfil</span></a>
+      </nav>
+    </div>
+    <button type="button" class="assistente-botao" aria-expanded="false" aria-controls="assistente-painel" aria-label="Abrir a GI, a Estagiária" data-assistente-botao>
+      <span class="assistente-dica" aria-hidden="true">Pede pra GI</span>
+      <span class="assistente-gi" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#gi-corpo" fill="url(#gi-luz)"/><rect x="36.4" y="40.75" width="10.2" height="18.5" rx="5.1" fill="#1c1514"/><rect x="53.4" y="40.75" width="10.2" height="18.5" rx="5.1" fill="#1c1514"/></svg></span>
+    </button>
+  </div>
 
   <footer class="rodape">
     <img src="assets/marca/logo.svg" alt="RU-FOOD" width="108" height="20" />

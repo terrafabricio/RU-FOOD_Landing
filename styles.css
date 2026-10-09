@@ -566,7 +566,6 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 
 /* Como funciona */
 .fluxo { position: relative; }
-.fluxo-linhas { display: none; }
 .fluxo-centro { margin-bottom: 18px; }
 .fluxo-centro .gi { animation: flutuar 5s ease-in-out infinite; }
 @keyframes flutuar { 50% { translate: 0 -10px; } }
@@ -811,8 +810,6 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 
   /* Diagrama de nós com linhas */
   .fluxo { height: 900px; }
-  .fluxo-linhas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .fluxo-linhas path { fill: none; stroke: var(--ketchup); stroke-width: 2; stroke-dasharray: 7 9; opacity: .6; vector-effect: non-scaling-stroke; }
   .fluxo-centro { position: absolute; left: 50%; top: 0; transform: translateX(-50%); margin: 0; }
   .fluxo-nos { padding: 0; position: static; }
   .fluxo-nos::before { display: none; }
@@ -837,7 +834,7 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 }
 
 /* =====================================================================
-   Camada premium: progresso, faixa, cursor, brilho, cortinas, leitura
+   Camada premium: progresso, faixa, cortinas, leitura
    (tudo opcional: sem JS ou com "reduzir movimento" a página fica estática)
    ===================================================================== */
 
@@ -852,38 +849,6 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 .faixa span { font: 800 clamp(1.6rem, 4.2vw, 3.4rem)/1 var(--f-display); letter-spacing: -.035em; white-space: nowrap; }
 .faixa span.ketchup { color: var(--mostarda); }
 .faixa i { width: clamp(16px, 2vw, 26px); aspect-ratio: 1; flex-shrink: 0; border-radius: 32%; background: var(--ketchup); box-shadow: inset 0 -3px 0 rgb(0 0 0 / .18); }
-
-/* Cursor com rastro (só mouse) */
-.cursor {
-  position: fixed; z-index: 90; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
-  border: 1.5px solid rgb(227 36 27 / .55); pointer-events: none; opacity: 0;
-  transition: opacity .3s, width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease), background-color .35s, border-color .35s;
-}
-.cursor.is-visivel { opacity: 1; }
-.cursor.is-alvo { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgb(255 196 37 / .16); border-color: rgb(255 196 37 / .7); }
-.cursor.is-escuro { border-color: rgb(255 255 255 / .6); }
-
-/* Brilho que acompanha o mouse nos cartões */
-@media (pointer: fine) {
-  .cartao, .perfil, .no, .onde a { isolation: isolate; }
-  .perfil, .onde a { position: relative; }
-  .cartao::before, .perfil::before, .no::before, .onde a::before {
-    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 196 37 / .2), transparent 45%);
-    transition: opacity .4s var(--ease);
-  }
-  .cartao--ketchup::before, .cartao--escuro::before { background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / .14), transparent 45%); }
-  .cartao:hover::before, .perfil:hover::before, .no:hover::before, .onde a:hover::before { opacity: 1; }
-
-  /* Reflexo que atravessa o botão principal */
-  .botao--p { position: relative; overflow: hidden; isolation: isolate; }
-  .botao--p::after {
-    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / .28) 48%, transparent 66%);
-    translate: -120% 0; transition: translate .7s var(--ease);
-  }
-  .botao--p:hover::after { translate: 120% 0; }
-}
 
 /* Profundidade na rolagem (translate separado do transform, não briga com rotações) */
 [data-prof] { translate: 0 var(--py, 0px); }
@@ -928,7 +893,7 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 
 @media (prefers-reduced-motion: reduce) {
   .faixa-trilho { flex-wrap: wrap; width: auto; justify-content: center; }
-  .cursor, .progresso { display: none; }
+  .progresso { display: none; }
 }
 
 /* ---------- Ajustes de marca (design system RU-FOOD) ---------- */
@@ -954,3 +919,233 @@ a.aviso:hover { box-shadow: var(--sombra-2); translate: 0 -1px; }
 .dilema-selo-carimbo--ok { flex-wrap: wrap; column-gap: 8px; row-gap: 2px; }
 .dilema-selo-carimbo--ok span { white-space: nowrap; }
 .dilema-selo-carimbo--ok small { flex-basis: 100%; padding-left: 30px; }
+
+/* =====================================================================
+   v2 · Hero vermelho, letreiro nas chamadas e a GI estacionada
+   ===================================================================== */
+
+/* Chamadas em letreiro (Modak) */
+.letreiro { font-family: var(--f-letreiro); font-weight: 400; letter-spacing: -.005em; line-height: .92; }
+.letreiro .palavra { padding-bottom: .1em; margin-bottom: -.1em; }
+.h1.letreiro { font-size: clamp(2.6rem, 6.4vw, 5.4rem); }
+.titulo-ancora.letreiro { font-size: clamp(3rem, 7.6vw, 7.2rem); }
+
+/* Hero em ketchup com papel de bandeja */
+.hero { background: var(--ketchup); color: var(--creme); }
+.hero-shader {
+  background: radial-gradient(42% 46% at 74% 42%, rgb(255 196 37 / .38), transparent 70%), radial-gradient(120% 90% at 30% 20%, var(--ketchup) 40%, var(--ketchup-fundo)), var(--ketchup);
+  mask-image: none; -webkit-mask-image: none;
+}
+.pontos--hero { mask-image: radial-gradient(ellipse 85% 75% at 28% 34%, #000 15%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse 85% 75% at 28% 34%, #000 15%, transparent 80%); }
+.hero-sobre {
+  display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  font-size: .75rem; line-height: 1; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--creme);
+}
+.hero-sobre::before { content: ""; width: 22px; height: 10px; border-radius: 4px 9px 4px 4px; background: var(--mostarda); }
+.hero-titulo { font-family: var(--f-letreiro); font-weight: 400; letter-spacing: -.005em; line-height: .9; color: var(--creme); font-size: clamp(3rem, 13.2vw, 6.6rem); text-shadow: 0 6px 0 rgb(120 10 5 / .28); }
+.hero-titulo .linha { padding-bottom: .1em; }
+.hero-sub { color: #fff; }
+.hero-sub b { color: #fff; }
+.hero-selos li { background: var(--ketchup-fundo); border-color: rgb(255 255 255 / .2); color: var(--creme); }
+.botao--mostarda { background: var(--mostarda); color: var(--tinta); box-shadow: 0 12px 26px -12px rgb(80 10 5 / .7); }
+.botao--mostarda:hover { background: #ffd35c; }
+.botao--mostarda:active { background: var(--mostarda-fundo); }
+.hero .botao--s { background: var(--creme); box-shadow: 0 12px 26px -14px rgb(80 10 5 / .6); }
+.hero .botao--s:hover { background: #fff; }
+.hero :focus-visible { outline-color: var(--mostarda); }
+.hero-palco .flutua, .hero-palco .etiqueta { z-index: 4; }
+.etiqueta { color: var(--tinta); }
+
+/* Prato mostarda atrás da mascote, com órbita pontilhada */
+.gi3d-halo {
+  position: absolute; left: 50%; top: 50%; width: min(64%, 360px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #ffd35c, var(--mostarda) 55%, var(--mostarda-fundo));
+  box-shadow: 0 0 0 14px rgb(255 196 37 / .18), 0 40px 70px -30px rgb(80 5 0 / .6);
+  opacity: calc(1 - var(--voo, 0) * 1.4); scale: calc(1 - var(--voo, 0) * .25);
+}
+.gi3d-halo::after { content: ""; position: absolute; inset: -34px; border-radius: 50%; border: 2px dashed rgb(251 246 238 / .45); animation: orbita 40s linear infinite; }
+@keyframes orbita { to { rotate: 1turn; } }
+.gi3d-reserva { filter: drop-shadow(3px 0 0 var(--creme)) drop-shadow(-3px 0 0 var(--creme)) drop-shadow(0 3px 0 var(--creme)) drop-shadow(0 -3px 0 var(--creme)) drop-shadow(0 24px 30px rgb(80 5 0 / .45)); }
+
+/* Palco de dispositivos na divisa vermelho/creme */
+.palco { background: linear-gradient(to bottom, transparent 0 58%, var(--creme) 58%); }
+
+/* Mascote 3D em voo: canvas fixo que sai do hero e estaciona no canto */
+.gi-voo { position: fixed; left: 0; top: 0; z-index: 3; pointer-events: none; transform-origin: 0 0; will-change: transform; }
+.gi-voo canvas { display: block; width: 100% !important; height: 100% !important; }
+
+/* GI estacionada: botão e painel */
+.assistente {
+  position: fixed; z-index: 65; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: grid; justify-items: end; gap: 12px; pointer-events: none;
+}
+.assistente-botao {
+  position: relative; width: 68px; height: 68px; padding: 0; border: 0; border-radius: 22px; background: transparent; cursor: pointer;
+  opacity: 0; scale: .6; pointer-events: none; transition: opacity .35s var(--ease), scale .55s var(--mola);
+}
+.gi-ancorada .assistente-botao { opacity: 1; scale: 1; pointer-events: auto; }
+.assistente-botao:focus-visible { outline: 3px solid var(--ketchup); outline-offset: 4px; }
+.assistente-gi { display: block; width: 100%; height: 100%; transition: opacity .2s; }
+.assistente-gi svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 12px 16px rgb(80 5 0 / .35)); }
+.assistente.tem-3d .assistente-gi { opacity: 0; }
+.assistente-dica {
+  position: absolute; right: calc(100% + 10px); top: 50%; translate: 6px -50%; white-space: nowrap; padding: 9px 14px; border-radius: 999px;
+  background: var(--tinta); color: var(--creme); font: 700 .8125rem/1 var(--f-corpo); box-shadow: var(--sombra-ilha);
+  opacity: 0; pointer-events: none; transition: opacity .3s var(--ease), translate .4s var(--ease);
+}
+.assistente-botao:hover .assistente-dica, .assistente-botao:focus-visible .assistente-dica, .assistente.mostra-dica .assistente-dica { opacity: 1; translate: 0 -50%; }
+.assistente.is-aberto .assistente-dica { opacity: 0; }
+.assistente-painel {
+  pointer-events: auto; width: min(340px, calc(100vw - 32px)); max-height: min(72vh, 540px); overflow-y: auto; overscroll-behavior: contain;
+  display: grid; gap: 12px; padding: 14px; border-radius: var(--r-g); background: var(--superficie);
+  box-shadow: var(--sombra-cartao), var(--sombra-3); transform-origin: 100% 100%; color: var(--tinta);
+}
+.assistente-topo { display: flex; align-items: center; gap: 10px; }
+.assistente-topo > div { flex: 1; min-width: 0; }
+.assistente-avatar { width: 40px; height: 40px; flex-shrink: 0; }
+.assistente-avatar svg { width: 100%; height: 100%; }
+.assistente-nome { font: 800 1rem/1.2 var(--f-display); letter-spacing: -.01em; }
+.assistente-status { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: var(--tinta-suave); }
+.assistente-status span { width: 7px; height: 7px; border-radius: 50%; background: var(--mostarda-fundo); }
+.assistente-fechar { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--creme-fundo); color: var(--tinta); cursor: pointer; }
+.assistente-fechar svg { width: 18px; height: 18px; }
+.assistente-conversa { position: relative; min-height: 64px; }
+.assistente-msg { padding: 12px 14px; border-radius: 16px 16px 16px 6px; background: var(--creme-fundo); font-size: .9375rem; line-height: 1.45; }
+.assistente-digitando { position: absolute; left: 0; top: 0; display: none; gap: 5px; padding: 14px 16px; border-radius: 16px 16px 16px 6px; background: var(--creme-fundo); }
+.assistente-digitando i { width: 7px; height: 7px; border-radius: 50%; background: var(--tinta-suave); animation: digita 1s infinite ease-in-out; }
+.assistente-digitando i:nth-child(2) { animation-delay: .15s; }
+.assistente-digitando i:nth-child(3) { animation-delay: .3s; }
+@keyframes digita { 0%, 60%, 100% { translate: 0 0; opacity: .5; } 30% { translate: 0 -4px; opacity: 1; } }
+.assistente.is-digitando .assistente-digitando { display: flex; }
+.assistente.is-digitando .assistente-msg { visibility: hidden; }
+.assistente-opcoes { display: grid; gap: 6px; }
+.assistente-opcoes a {
+  display: grid; gap: 2px; padding: 10px 12px; border-radius: 14px; background: var(--creme); text-decoration: none;
+  transition: background-color .2s, translate .25s var(--ease);
+}
+.assistente-opcoes a:hover { background: var(--ketchup-tinta); translate: -2px 0; }
+.assistente-opcoes b { font: 500 .8125rem/1.2 var(--f-mono); color: var(--ketchup-fundo); }
+.assistente-opcoes span { font-size: .875rem; line-height: 1.35; color: var(--tinta); }
+@media (max-width: 560px) {
+  .assistente-botao { width: 58px; height: 58px; border-radius: 18px; }
+}
+.assistente-painel[hidden] { display: none; }
+
+/* ---------- Como funciona: rota pontilhada ---------- */
+.fluxo-rota { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.fluxo-rota path { fill: none; }
+.rota-fantasma { stroke: var(--linha); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 0 13; }
+.rota-pontos { stroke: var(--ketchup); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0 13; }
+[data-rota-mascara] { stroke: #fff; stroke-width: 18; stroke-linecap: round; fill: none; }
+.rota-viajante { transition: opacity .3s; }
+.rota-viajante circle { fill: var(--ketchup); stroke: var(--creme); stroke-width: 3; }
+.rota-viajante .rota-viajante-miolo { fill: var(--creme); stroke: none; }
+.rota-viajante .rota-viajante-halo { fill: rgb(227 36 27 / .16); stroke: none; transform-box: fill-box; transform-origin: center; animation: viajante 1.6s var(--ease) infinite; }
+@keyframes viajante { from { scale: .6; opacity: 1; } to { scale: 1.6; opacity: 0; } }
+.fluxo-centro, .fluxo-nos { position: relative; z-index: 1; }
+.fluxo-nos::before { display: none; }
+.fluxo-nos { padding-left: 46px; }
+.no-selo { left: -44px; }
+.no { transition: translate .35s var(--ease), box-shadow .5s var(--ease); }
+.no.is-alcancado { box-shadow: 0 0 0 2px rgb(227 36 27 / .18), var(--sombra-2); }
+.fluxo-nota {
+  max-width: 720px; margin: clamp(28px, 5vh, 56px) auto 0; padding: 16px 20px; border-radius: var(--r-2xl);
+  background: var(--creme-fundo); color: var(--tinta-suave); font-size: .9375rem; text-align: center;
+}
+.fluxo-nota b { color: var(--tinta); }
+@media (min-width: 901px) {
+  .fluxo-nos { padding-left: 0; position: static; }
+  .no { z-index: 1; }
+  .no-selo { left: auto; }
+  .no--2 .no-selo, .no--4 .no-selo { right: auto; left: -12px; }
+  .fluxo-centro { position: absolute; z-index: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .rota-viajante { display: none; } }
+
+/* ---------- Telas em wireframe (antes de revelar a captura real) ---------- */
+.tv-tela, .ipad-tela { position: relative; overflow: hidden; }
+.wire {
+  position: absolute; inset: 0; z-index: 6; overflow: hidden; pointer-events: none;
+  background: radial-gradient(rgb(42 22 12 / .08) 1px, transparent 1px) 0 0 / 10px 10px var(--creme);
+}
+.wire i { position: absolute; display: block; border: 1.5px dashed rgb(227 36 27 / .55); border-radius: 6px; background: rgb(255 255 255 / .55); }
+.w-scan { position: absolute; left: 0; right: 0; top: 0; z-index: 7; height: 2px; background: var(--ketchup); box-shadow: 0 0 0 1px rgb(255 255 255 / .6), 0 0 18px 4px rgb(227 36 27 / .45); pointer-events: none; opacity: 0; }
+/* painel */
+.wire--painel .w-lado { left: 2%; top: 3%; bottom: 3%; width: 15%; background: rgb(42 22 12 / .06); }
+.wire--painel .w-topo { left: 20%; right: 2%; top: 3%; height: 8%; }
+.wire--painel .w-c1, .wire--painel .w-c2, .wire--painel .w-c3 { top: 15%; height: 22%; width: 24.5%; }
+.wire--painel .w-c1 { left: 20%; border-color: rgb(227 36 27 / .8); }
+.wire--painel .w-c2 { left: 46.7%; border-color: rgb(224 164 0 / .9); }
+.wire--painel .w-c3 { left: 73.4%; border-color: rgb(47 122 59 / .7); }
+.wire--painel .w-tab { left: 20%; right: 2%; top: 41%; bottom: 4%; }
+.wire--painel .w-l1, .wire--painel .w-l2, .wire--painel .w-l3 { left: 23%; height: 0; border-width: 1.5px 0 0; border-radius: 0; background: none; }
+.wire--painel .w-l1 { top: 52%; right: 6%; }
+.wire--painel .w-l2 { top: 64%; right: 18%; }
+.wire--painel .w-l3 { top: 76%; right: 10%; }
+/* app do celular */
+.wire--app .w-status { left: 8%; right: 8%; top: 3%; height: 3%; border-style: solid; background: rgb(42 22 12 / .06); }
+.wire--app .w-titulo { left: 8%; width: 62%; top: 10%; height: 6%; }
+.wire--app .w-card { left: 6%; right: 6%; height: 17%; }
+.wire--app .w-card--1 { top: 20%; border-color: rgb(227 36 27 / .8); background: rgb(227 36 27 / .08); }
+.wire--app .w-card--2 { top: 40%; }
+.wire--app .w-card--3 { top: 60%; }
+.wire--app .w-nav { left: 0; right: 0; bottom: 0; height: 9%; border-radius: 0; border-width: 1.5px 0 0; }
+/* TV do salão */
+.wire--tv { background: radial-gradient(rgb(255 255 255 / .08) 1px, transparent 1px) 0 0 / 10px 10px #1f140e; }
+.wire--tv .w-titulo { left: 4%; width: 46%; top: 7%; height: 12%; border-color: rgb(255 196 37 / .8); background: none; }
+.wire--tv .w-col { top: 26%; bottom: 7%; width: 29%; border-color: rgb(251 246 238 / .45); background: none; }
+.wire--tv .w-col--1 { left: 4%; } .wire--tv .w-col--2 { left: 35.5%; } .wire--tv .w-col--3 { left: 67%; }
+/* totem */
+.wire--totem .w-qr { left: 5%; top: 10%; width: 32%; aspect-ratio: 1; border-style: solid; background: repeating-linear-gradient(90deg, rgb(42 22 12 / .12) 0 6px, transparent 6px 12px); }
+.wire--totem .w-titulo--direita { left: 44%; right: 5%; top: 10%; height: 10%; }
+.wire--totem .w-op { left: 44%; right: 5%; height: 17%; }
+.wire--totem .w-op--1 { top: 26%; border-color: rgb(227 36 27 / .8); } .wire--totem .w-op--2 { top: 47%; border-color: rgb(224 164 0 / .9); } .wire--totem .w-op--3 { top: 68%; border-color: rgb(47 122 59 / .7); }
+/* O rodapé deixa espaço para a GI estacionada */
+.rodape { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+
+/* =====================================================================
+   Revisão de contraste, acessibilidade e proporção
+   ===================================================================== */
+:root { --tinta-fraca: #7a5f4f; } /* 4,9:1 sobre creme (era 4,0:1) */
+/* Texto sobre ketchup: branco puro (4,6:1); creme fica para títulos grandes */
+.botao--p { color: #fff; }
+.cartao--ketchup p { color: #fff; }
+.cartao--ketchup .tag--clara { background: var(--ketchup-fundo); color: #fff; }
+.gi-secao .sobrelinha--clara, .acessos .sobrelinha--clara { color: #fff; }
+.gi-acoes b { color: #ffd35c; } /* 4,6:1 sobre ketchup-deep */
+.dilema-vs { color: var(--mostarda); background: rgb(255 196 37 / .12); border-color: rgb(255 196 37 / .3); }
+.rodape p { color: var(--tinta-suave); }
+/* Mostarda sobre vermelho (2,9:1): letreiro com contorno marrom, como placa pintada */
+.hero .mostarda, .gi-secao .mostarda, .acessos .mostarda {
+  -webkit-text-stroke: .07em var(--tinta); paint-order: stroke fill; text-shadow: .045em .06em 0 var(--tinta);
+}
+.hero-titulo .mostarda { text-shadow: .045em .06em 0 var(--tinta); }
+/* Foco visível sobre blocos vermelhos e escuros */
+.hero :focus-visible, .gi-secao :focus-visible, .acessos :focus-visible, .dilema :focus-visible,
+.cartao--ketchup :focus-visible, .nota-senha :focus-visible, .faixa :focus-visible { outline-color: var(--mostarda); }
+.perfil :focus-visible, .assistente :focus-visible { outline-color: var(--ketchup); }
+/* Pontos do dilema: área de toque de 24px, barra de 6px desenhada por dentro */
+.dilema-ponto { height: 24px; background: transparent; border-radius: 0; overflow: visible; }
+.dilema-ponto::before { content: ""; position: absolute; left: 0; right: 0; top: 9px; height: 6px; border-radius: 999px; background: rgb(251 246 238 / .28); transition: background-color .3s; }
+.dilema-ponto:hover { background: transparent; }
+.dilema-ponto:hover::before { background: rgb(251 246 238 / .55); }
+.dilema-ponto.is-ativo { background: transparent; }
+.dilema-ponto.is-ativo::before { background: var(--mostarda); }
+.dilema-ponto::after { inset: 9px 0; height: 6px; border-radius: 999px; }
+.dilema-pontos { margin-top: 16px; }
+/* Dilema: os cenários ocupam a vitrine inteira, sem cartão dentro de cartão */
+.dilema-vitrine { min-height: 0; }
+.dilema-card-critico, .dilema-card-sucesso { background: none; border: 0; box-shadow: none; padding: clamp(4px, 1vw, 12px); }
+@media (min-width: 901px) { .dilema-vitrine { min-height: 440px; } }
+/* Comparativo: o cabeçalho da linha agora é um div com o h3 dentro */
+.comp-linha > [role="rowheader"] { min-width: 0; }
+/* Proporção dos títulos-letreiro na coluna de acessos */
+.acessos .h1.letreiro { font-size: clamp(2.4rem, 4.8vw, 4.4rem); }
+/* Como funciona: etapas mais legíveis no desktop */
+@media (min-width: 901px) { .no { width: min(370px, 31%); } }
+/* O rodapé deixa espaço para a GI estacionada */
+.rodape { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+/* Título do hero proporcional à coluna no desktop (não estoura em 1024px) */
+@media (min-width: 901px) { .hero-titulo { font-size: clamp(3.4rem, 6.6vw, 6.8rem); } }
+/* Mascote do hero dentro da coluna em qualquer largura de desktop */
+@media (min-width: 901px) { .gi3d { inset: -8% -4% -8% -4%; } }

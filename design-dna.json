@@ -5,58 +5,207 @@
     "source_references": [
       "https://www.behance.net/gallery/255995905/Tahdani-Mobile-App-Website-Revamp",
       "RU-FOOD app — card 'Semana de 12–17 out' (screenshot 4)",
-      "web/src/app/globals.css"
+      "web/src/app/globals.css",
+      "https://www.behance.net/gallery/249780345/Pilo-Autonomous-Taxi-App-UXUI-Branding (não acessível na análise)"
     ],
-    "created_at": "2026-10-09"
+    "created_at": "2026-10-09",
+    "updated_at": "2026-10-09",
+    "revision_notes": [
+      "v2: hero em ketchup com textura de papel de bandeja (pontos 1.5px, branco 22%, passo 14px) e shader WebGL em tons quentes",
+      "v2: chamadas em Modak (letreiro) no hero, 'Por que RU-FOOD?', 'Quatro portais', 'Pede pra GI', 'Conheça por dentro' e 'Tá na mesa'",
+      "v2: sem cursor personalizado, sem brilho seguindo o mouse e sem partículas ao redor da mascote (lidos como 'cara de IA')",
+      "v2: mascote 3D com contorno creme e prato mostarda; encolhe na rolagem e estaciona no canto como assistente (GI) com atalhos",
+      "v2: 'Como funciona' com rota pontilhada calculada pelas posições reais das etapas, desenhada com scrub e marcador percorrendo",
+      "v2: telas dos dispositivos surgem como wireframe tracejado e são reveladas de cima para baixo por uma linha de varredura",
+      "Referência Pilo (Behance 249780345) não pôde ser lida (bloqueio do site); os padrões de rota e wireframe vêm do pedido do cliente"
+    ]
   },
   "design_system": {
     "color": {
       "palette_type": "warm monochromatic + one saturated hero hue (Tahdani: laranja #e97a2d sobre creme #fcf6ef; RU-FOOD: ketchup #e3241b sobre creme #fbf6ee)",
-      "primary": { "hex": "#e3241b", "role": "Marca, títulos display gigantes, CTA principal, blocos-capítulo cheios (equivale ao laranja #e97a2d da referência)" },
-      "secondary": { "hex": "#2a160c", "role": "Tinta marrom-chapa: texto, superfícies escuras, sidebar do painel (equivale ao verde-escuro #15311c da referência)" },
-      "accent": { "hex": "#ffc425", "role": "Mostarda: destaques de número, selos, brilho no hero e ícone de 'sparkle'" },
+      "primary": {
+        "hex": "#e3241b",
+        "role": "Marca, títulos display gigantes, CTA principal, blocos-capítulo cheios (equivale ao laranja #e97a2d da referência)"
+      },
+      "secondary": {
+        "hex": "#2a160c",
+        "role": "Tinta marrom-chapa: texto, superfícies escuras, sidebar do painel (equivale ao verde-escuro #15311c da referência)"
+      },
+      "accent": {
+        "hex": "#ffc425",
+        "role": "Mostarda: destaques de número, selos, brilho no hero e ícone de 'sparkle'"
+      },
       "neutral": {
-        "scale": ["#ffffff", "#fbf6ee", "#f4ead9", "#ecdfcd", "#a68d7c", "#6f5444", "#2a160c"],
+        "scale": [
+          "#ffffff",
+          "#fbf6ee",
+          "#f4ead9",
+          "#ecdfcd",
+          "#a68d7c",
+          "#6f5444",
+          "#2a160c"
+        ],
         "usage": "Creme é o fundo de página (como o #fcf6ef medido na referência); #2a160c é a cor de texto sobre creme; branco é a superfície dos cards; #ecdfcd para linhas tracejadas e grades."
       },
-      "semantic": { "success": "#2f7a3b", "warning": "#e0a400", "error": "#b81b13", "info": "#ff7a1a" },
-      "surface": { "background": "#fbf6ee", "card": "#ffffff", "elevated": "#ffffff" },
+      "semantic": {
+        "success": "#2f7a3b",
+        "warning": "#e0a400",
+        "error": "#b81b13",
+        "info": "#ff7a1a"
+      },
+      "surface": {
+        "background": "#fbf6ee",
+        "card": "#ffffff",
+        "elevated": "#ffffff"
+      },
       "contrast_strategy": "Página clara e calma; capítulos alternam com blocos cheios de ketchup ou marrom para virar a página da história. Texto do corpo sempre #2a160c ou #6f5444 sobre creme (AA).",
-      "measurement": { "k": 8, "sampling": { "method": "deterministic_stratified", "max_pixels": 160000, "sampled_pixels": 160000 } },
+      "measurement": {
+        "k": 8,
+        "sampling": {
+          "method": "deterministic_stratified",
+          "max_pixels": 160000,
+          "sampled_pixels": 160000
+        }
+      },
       "measured_palette": [
-        { "hex": "#d24132", "coverage": 0.7597, "role": "background" },
-        { "hex": "#faf7f0", "coverage": 0.1835, "role": "text" },
-        { "hex": "#6b2a15", "coverage": 0.0249, "role": "accent" },
-        { "hex": "#edd5cd", "coverage": 0.0202, "role": "unassigned" },
-        { "hex": "#d69d91", "coverage": 0.0051, "role": "unassigned" },
-        { "hex": "#dd7153", "coverage": 0.0049, "role": "unassigned" },
-        { "hex": "#905f4e", "coverage": 0.001, "role": "unassigned" },
-        { "hex": "#f5c44d", "coverage": 0.0008, "role": "unassigned" }
+        {
+          "hex": "#d24132",
+          "coverage": 0.7597,
+          "role": "background"
+        },
+        {
+          "hex": "#faf7f0",
+          "coverage": 0.1835,
+          "role": "text"
+        },
+        {
+          "hex": "#6b2a15",
+          "coverage": 0.0249,
+          "role": "accent"
+        },
+        {
+          "hex": "#edd5cd",
+          "coverage": 0.0202,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#d69d91",
+          "coverage": 0.0051,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#dd7153",
+          "coverage": 0.0049,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#905f4e",
+          "coverage": 0.001,
+          "role": "unassigned"
+        },
+        {
+          "hex": "#f5c44d",
+          "coverage": 0.0008,
+          "role": "unassigned"
+        }
       ],
       "reference_measured_palette": [
-        { "hex": "#fcf6ef", "coverage": 0.731, "role": "background" },
-        { "hex": "#e97a2d", "coverage": 0.092, "role": "accent" },
-        { "hex": "#15311c", "coverage": 0.104, "role": "text" },
-        { "hex": "#ebe0c8", "coverage": 0.064, "role": "grid/surface tint" }
+        {
+          "hex": "#fcf6ef",
+          "coverage": 0.731,
+          "role": "background"
+        },
+        {
+          "hex": "#e97a2d",
+          "coverage": 0.092,
+          "role": "accent"
+        },
+        {
+          "hex": "#15311c",
+          "coverage": 0.104,
+          "role": "text"
+        },
+        {
+          "hex": "#ebe0c8",
+          "coverage": 0.064,
+          "role": "grid/surface tint"
+        }
       ]
     },
     "typography": {
       "type_scale": {
-        "display": { "size": "clamp(3.5rem, 10vw, 9.5rem)", "weight": "800", "line_height": "0.9", "tracking": "-0.045em" },
-        "heading_1": { "size": "clamp(2.6rem, 6vw, 5.2rem)", "weight": "800", "line_height": "0.98", "tracking": "-0.035em" },
-        "heading_2": { "size": "clamp(1.9rem, 3.6vw, 3.1rem)", "weight": "800", "line_height": "1.04", "tracking": "-0.025em" },
-        "heading_3": { "size": "1.35rem", "weight": "700", "line_height": "1.2", "tracking": "-0.01em" },
-        "body": { "size": "1.0625rem", "weight": "400", "line_height": "1.6", "tracking": "0" },
-        "body_small": { "size": "0.9375rem", "weight": "400", "line_height": "1.55", "tracking": "0" },
-        "caption": { "size": "0.8125rem", "weight": "500", "line_height": "1.4", "tracking": "0.01em" },
-        "overline": { "size": "0.75rem", "weight": "700", "line_height": "1", "tracking": "0.14em" }
+        "display": {
+          "size": "clamp(3.5rem, 10vw, 9.5rem)",
+          "weight": "800",
+          "line_height": "0.9",
+          "tracking": "-0.045em"
+        },
+        "heading_1": {
+          "size": "clamp(2.6rem, 6vw, 5.2rem)",
+          "weight": "800",
+          "line_height": "0.98",
+          "tracking": "-0.035em"
+        },
+        "heading_2": {
+          "size": "clamp(1.9rem, 3.6vw, 3.1rem)",
+          "weight": "800",
+          "line_height": "1.04",
+          "tracking": "-0.025em"
+        },
+        "heading_3": {
+          "size": "1.35rem",
+          "weight": "700",
+          "line_height": "1.2",
+          "tracking": "-0.01em"
+        },
+        "body": {
+          "size": "1.0625rem",
+          "weight": "400",
+          "line_height": "1.6",
+          "tracking": "0"
+        },
+        "body_small": {
+          "size": "0.9375rem",
+          "weight": "400",
+          "line_height": "1.55",
+          "tracking": "0"
+        },
+        "caption": {
+          "size": "0.8125rem",
+          "weight": "500",
+          "line_height": "1.4",
+          "tracking": "0.01em"
+        },
+        "overline": {
+          "size": "0.75rem",
+          "weight": "700",
+          "line_height": "1",
+          "tracking": "0.14em"
+        }
       },
-      "font_families": { "heading": "'Bricolage Grotesque', system-ui, sans-serif", "body": "'DM Sans', system-ui, sans-serif", "mono": "'JetBrains Mono', ui-monospace, monospace" },
+      "font_families": {
+        "heading": "'Bricolage Grotesque', system-ui, sans-serif",
+        "body": "'DM Sans', system-ui, sans-serif",
+        "mono": "'JetBrains Mono', ui-monospace, monospace",
+        "letreiro": "'Modak', 'Bricolage Grotesque', system-ui, sans-serif"
+      },
       "font_style_notes": "Referência usa um grotesco geométrico pesado em cor de marca para títulos-âncora ('Why Tahdani') e números enormes (+70 / 100+). Mapeado para Bricolage Grotesque 800 (fonte do app)."
     },
     "spacing": {
       "base_unit": "8px",
-      "scale": ["4px", "8px", "12px", "16px", "24px", "32px", "48px", "64px", "96px", "144px", "200px"],
+      "scale": [
+        "4px",
+        "8px",
+        "12px",
+        "16px",
+        "24px",
+        "32px",
+        "48px",
+        "64px",
+        "96px",
+        "144px",
+        "200px"
+      ],
       "content_density": "Arejada: um único foco por dobra, cards pequenos flutuando em muito espaço vazio",
       "section_rhythm": "Capítulos de 100–160vh; seções fixadas (pin) para histórias de rolagem"
     },
@@ -65,11 +214,20 @@
       "max_content_width": "1240px",
       "columns": "12",
       "gutter": "24px",
-      "breakpoints": { "mobile": "0–639px", "tablet": "640–1023px", "desktop": "1024px+" },
+      "breakpoints": {
+        "mobile": "0–639px",
+        "tablet": "640–1023px",
+        "desktop": "1024px+"
+      },
       "alignment_tendency": "Esquerda para texto; dispositivos centralizados com sangria e diagonais"
     },
     "shape": {
-      "border_radius": { "small": "12px", "medium": "20px", "large": "32px", "pill": "999px" },
+      "border_radius": {
+        "small": "12px",
+        "medium": "20px",
+        "large": "32px",
+        "pill": "999px"
+      },
       "border_usage": "Bordas de 1px quase invisíveis em cards; contornos grossos marrons só nos stickers",
       "divider_style": "Linhas tracejadas curvas ligando nós (diagrama) em vez de divisores retos"
     },
@@ -82,10 +240,23 @@
       },
       "depth_cues": "Dispositivos inclinados em perspectiva, sobrepostos; cards com selo de check flutuando sobre linhas"
     },
-    "iconography": { "style": "Linha arredondada (Lucide)", "stroke_weight": "2px", "size_scale": ["16px", "20px", "24px"], "preferred_set": "Lucide (SVG inline) + stickers ilustrados da marca" },
+    "iconography": {
+      "style": "Linha arredondada (Lucide)",
+      "stroke_weight": "2px",
+      "size_scale": [
+        "16px",
+        "20px",
+        "24px"
+      ],
+      "preferred_set": "Lucide (SVG inline) + stickers ilustrados da marca"
+    },
     "motion": {
       "easing": "cubic-bezier(.2,.8,.2,1)",
-      "duration_scale": { "micro": "160ms", "normal": "420ms", "macro": "900ms" },
+      "duration_scale": {
+        "micro": "160ms",
+        "normal": "420ms",
+        "macro": "900ms"
+      },
       "entrance_pattern": "Subir 40px + fade, escala .96→1, stagger 80ms; títulos revelados por palavra com máscara",
       "exit_pattern": "Scrub reverso (a rolagem desfaz)",
       "philosophy": "Rolagem conta a história: cada dobra revela um card, um dispositivo ou um número"
@@ -106,8 +277,18 @@
       "visual_metaphor": "Bandeja do RU: tudo no lugar, porção certa",
       "era_influence": "Case-study de Behance 2025–26: product storytelling com mockups 3D",
       "genre": "Product marketing / SaaS B2G",
-      "personality_traits": ["acolhedor", "preciso", "brincalhão", "confiável"],
-      "adjectives": ["quente", "limpo", "editorial", "tátil"]
+      "personality_traits": [
+        "acolhedor",
+        "preciso",
+        "brincalhão",
+        "confiável"
+      ],
+      "adjectives": [
+        "quente",
+        "limpo",
+        "editorial",
+        "tátil"
+      ]
     },
     "visual_language": {
       "complexity": "Média: poucos elementos por dobra, ricos em detalhe",
@@ -156,36 +337,102 @@
     },
     "background_effects": {
       "type": "generative-art",
-      "description": "Campo de manchas quentes (ketchup/mostarda/creme) com ruído e grão, reagindo ao mouse, só no hero",
+      "description": "Campo ketchup com vinheta ketchup-deep e brilho mostarda/chama atrás da mascote, coberto pela textura de papel de bandeja",
       "technology": "WebGL (fragment shader puro)",
-      "params": { "color_palette": ["#fbf6ee", "#ffc425", "#e3241b", "#ff7a1a"], "speed": "lenta", "density": "3 manchas", "opacity": "0.9", "blend_mode": "normal" }
+      "params": {
+        "color_palette": [
+          "#e3241b",
+          "#b81b13",
+          "#ff7a1a",
+          "#ffc425"
+        ],
+        "speed": "lenta",
+        "density": "3 manchas",
+        "opacity": "0.9",
+        "blend_mode": "normal"
+      }
     },
     "particle_systems": {
-      "enabled": true,
-      "type": "flutuação",
-      "description": "Grãos de arroz e confetes de cor flutuando atrás da GI 3D",
-      "technology": "Three.js Points",
-      "params": { "count": 180, "shape": "cápsula/ponto", "size_range": "2–6px", "movement_pattern": "deriva senoidal", "color_behavior": "paleta da marca", "interaction": "parallax pelo mouse", "spawn_area": "esfera ao redor do mascote" }
+      "enabled": false,
+      "type": "nenhum",
+      "description": "Removido na v2: as partículas ao redor da mascote competiam com ela e liam como efeito genérico.",
+      "technology": "nenhuma",
+      "params": {}
     },
     "3d_elements": {
       "enabled": true,
       "type": "objeto de marca",
-      "description": "GI extrudada (squircle com mordida) com olhos que seguem o cursor e piscam; substitui o 'laptop em cena 3D' da referência",
+      "description": "GI extrudada com contorno creme (casco invertido) sobre prato mostarda com órbita pontilhada; olhos seguem o cursor; com a rolagem encolhe e estaciona no canto inferior direito como botão do assistente",
       "technology": "Three.js",
-      "params": { "renderer": "WebGLRenderer, alpha, antialias", "lighting": "hemisphere quente + direcional + rim light mostarda", "camera": "Perspective 35°", "materials": "MeshPhysical vermelho acetinado com clearcoat", "geometry": "ExtrudeGeometry do path SVG da mascote, bevel", "post_processing": "nenhum", "interaction_model": "segue o mouse, flutua, gira suave no scroll" }
+      "params": {
+        "renderer": "WebGLRenderer, alpha, antialias",
+        "lighting": "hemisphere quente + direcional + rim light mostarda",
+        "camera": "Perspective 35°",
+        "materials": "MeshPhysical vermelho acetinado com clearcoat",
+        "geometry": "ExtrudeGeometry do path SVG da mascote, bevel",
+        "post_processing": "nenhum",
+        "interaction_model": "segue o mouse, flutua, voa em arco até o canto guiada pela rolagem, pula ao toque e olha para o painel aberto"
+      }
     },
     "shader_effects": {
       "enabled": true,
       "type": "noise-distortion",
       "description": "Gradiente orgânico com fbm + grão",
       "technology": "GLSL",
-      "params": { "uniforms": ["u_time", "u_res", "u_mouse"], "vertex_manipulation": "nenhuma", "fragment_output": "mistura de 4 cores por fbm", "noise_type": "value noise fbm", "distortion": "domain warping leve" }
+      "params": {
+        "uniforms": [
+          "u_time",
+          "u_res",
+          "u_mouse"
+        ],
+        "vertex_manipulation": "nenhuma",
+        "fragment_output": "mistura de 4 cores por fbm",
+        "noise_type": "value noise fbm",
+        "distortion": "domain warping leve"
+      }
     },
     "scroll_effects": {
-      "parallax": { "enabled": true, "layers": 3, "depth_range": "-120px a 120px", "speed_curve": "linear scrub" },
-      "scroll_triggered_animations": { "enabled": true, "trigger_points": "top 80%", "animation_type": "fade-up, scale, path-draw, contador", "scrub_behavior": "misto: entradas disparadas, dispositivos e linhas com scrub" },
-      "scroll_morphing": { "enabled": true }
+      "parallax": {
+        "enabled": true,
+        "layers": 3,
+        "depth_range": "-120px a 120px",
+        "speed_curve": "linear scrub"
+      },
+      "scroll_triggered_animations": {
+        "enabled": true,
+        "trigger_points": "top 80%",
+        "animation_type": "fade-up, scale, path-draw, contador",
+        "scrub_behavior": "misto: entradas disparadas, dispositivos e linhas com scrub"
+      },
+      "scroll_morphing": {
+        "enabled": true
+      },
+      "path_draw": {
+        "enabled": true,
+        "description": "Rota pontilhada (stroke-dasharray 0 13, linecap round) revelada por máscara com scrub 0.8; marcador com halo percorre a rota; etapas entram ao serem alcançadas e saem ao voltar",
+        "technology": "SVG + GSAP ScrollTrigger"
+      },
+      "wireframe_reveal": {
+        "enabled": true,
+        "description": "Esqueleto tracejado (painel, app, TV, totem) se desenha em 0.7s e a captura real é revelada de cima para baixo com linha de varredura ketchup",
+        "technology": "CSS + GSAP"
+      },
+      "section_curtain": {
+        "enabled": true,
+        "description": "Blocos coloridos abrem de um cartão arredondado (inset 4%, raio 48px) para sangria total",
+        "technology": "clip-path + scrub"
+      }
     },
-    "composite_notes": "Na referência: laptop em cena 3D, diagrama de nós com linhas tracejadas curvas, amostras de cor gigantes inclinadas com linhas pingando, especificação tipográfica com caixa de seleção do Figma, telas antigas × novas com pílulas ✕. Tudo traduzido para o vocabulário RU-FOOD."
+    "composite_notes": "Na referência: laptop em cena 3D, diagrama de nós com linhas tracejadas curvas, amostras de cor gigantes inclinadas com linhas pingando, especificação tipográfica com caixa de seleção do Figma, telas antigas × novas com pílulas ✕. Tudo traduzido para o vocabulário RU-FOOD.",
+    "cursor_effects": {
+      "enabled": false,
+      "type": "nenhum",
+      "description": "Sem cursor personalizado. Interação de mouse limitada a inclinação leve dos dispositivos e botões magnéticos.",
+      "technology": "GSAP quickTo",
+      "params": {
+        "magnetic_buttons": true,
+        "tilt_strength_deg": 7
+      }
+    }
   }
 }

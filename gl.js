@@ -1,7 +1,7 @@
 // RU-FOOD · Landing — camada WebGL do hero.
 // 1) Shader puro (fbm + grão) com as cores da marca atrás do título.
 // 2) GI, a Estagiária, em 3D com Three.js: extrudada do path vetorial real da mascote,
-//    olhos que seguem o ponteiro e piscam, grãos de arroz flutuando em volta.
+//    olhos que seguem o ponteiro e piscam, contorno creme para destacar no vermelho.
 // Sem WebGL ou com "reduzir movimento": fica o gradiente CSS e a GI em SVG.
 import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
@@ -18,6 +18,7 @@ addEventListener("pointermove", (e) => {
   ponteiro.y = -(ponteiro.ny * 2 - 1);
 }, { passive: true });
 
+const raiz = document.documentElement;
 const hero = document.querySelector(".hero");
 let heroVisivel = true;
 new IntersectionObserver(([e]) => (heroVisivel = e.isIntersecting)).observe(hero);
@@ -50,16 +51,16 @@ function iniciarShader() {
       float r = length(d) + (n - .5) * .16;
       float mancha = smoothstep(.30, .0, r);
       float borda = smoothstep(.48, .08, r);
-      vec3 creme = vec3(.984,.965,.933);
       vec3 mostarda = vec3(1.,.769,.145);
       vec3 chama = vec3(1.,.478,.102);
       vec3 ketchup = vec3(.89,.141,.106);
-      vec3 col = creme;
-      col = mix(col, vec3(1.,.93,.80), borda * .55);
-      col = mix(col, mostarda, mancha * .65);
-      col = mix(col, chama, mancha * smoothstep(.42,.85,n) * .55);
-      col = mix(col, ketchup, mancha * smoothstep(.62,.95,q.x) * .35);
-      col += (hash(gl_FragCoord.xy + fract(u_time)) - .5) * .045;
+      vec3 fundo = vec3(.722,.106,.075);
+      // Base ketchup, bordas em ketchup-deep e um brilho quente atrás da mascote
+      float vinheta = smoothstep(.15, 1.05, length((uv - vec2(.38, .62)) * vec2(asp * .55, 1.)));
+      vec3 col = mix(ketchup, fundo, vinheta * .85 + (n - .5) * .18);
+      col = mix(col, chama, borda * .32);
+      col = mix(col, mostarda, mancha * smoothstep(.4, .85, n) * .38);
+      col += (hash(gl_FragCoord.xy + fract(u_time)) - .5) * .035;
       gl_FragColor = vec4(col, 1.);
     }`;
   const compilar = (tipo, src) => {
@@ -126,7 +127,16 @@ function iniciarGI() {
   renderer.setPixelRatio(Math.min(devicePixelRatio, fraco || toque ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
-  caixa.appendChild(renderer.domElement);
+  // O canvas vive numa camada fixa: começa sobre o lugar da GI no hero e,
+  // com a rolagem, encolhe até o botão do assistente no canto inferior direito.
+  const voo = document.createElement("div");
+  voo.className = "gi-voo";
+  voo.setAttribute("aria-hidden", "true");
+  voo.appendChild(renderer.domElement);
+  document.body.appendChild(voo);
+  const assistente = document.querySelector("[data-assistente]");
+  const botaoDock = document.querySelector("[data-assistente-botao]");
+  assistente?.classList.add("tem-3d");
 
   const cena = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
@@ -139,7 +149,7 @@ function iniciarGI() {
   const sol = new THREE.DirectionalLight(0xfff1dc, 1.6);
   sol.position.set(-3, 4, 5);
   cena.add(sol);
-  const contra = new THREE.PointLight(0xffc425, 18, 12);
+  const contra = new THREE.PointLight(0xffc425, 34, 12);
   contra.position.set(2.6, 1.8, -2);
   cena.add(contra);
 
@@ -160,6 +170,10 @@ function iniciarGI() {
   const gi = new THREE.Group();
   const corpo = new THREE.Mesh(geo, corpoMat);
   gi.add(corpo);
+  // Contorno creme de adesivo: o mesmo corpo um pouco maior, só com as faces de trás
+  const contorno = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0xfbf6ee, side: THREE.BackSide }));
+  contorno.scale.set(1.075, 1.075, 1.12);
+  gi.add(contorno);
 
   // Olhos: cápsulas marrom-chapa na face da frente
   const frente = 15 * U + 5 * U;
@@ -193,34 +207,60 @@ function iniciarGI() {
   sombra.position.y = -1.55;
   cena.add(sombra);
 
-  // Grãos de arroz flutuando em volta (uma malha instanciada: um único draw call)
-  const QTD = fraco ? 18 : 34;
-  const graoGeo = new THREE.CapsuleGeometry(0.035, 0.09, 4, 10);
-  const graoMat = new THREE.MeshStandardMaterial({ color: 0xfff6e6, roughness: 0.55, envMapIntensity: 0.5 });
-  const graos = new THREE.InstancedMesh(graoGeo, graoMat, QTD);
-  const sementes = Array.from({ length: QTD }, (_, i) => ({
-    raio: 1.45 + Math.random() * 0.85,
-    angulo: (i / QTD) * Math.PI * 2 + Math.random() * 0.4,
-    altura: (Math.random() - 0.5) * 2.4,
-    vel: (0.08 + Math.random() * 0.12) * (Math.random() < 0.5 ? -1 : 1),
-    giro: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize(),
-    fase: Math.random() * Math.PI * 2,
-    escala: 0.75 + Math.random() * 0.6,
-  }));
-  const aux = new THREE.Object3D();
-  cena.add(graos);
 
-  // Tamanho
+  // Tamanho: a camada fixa tem o tamanho do lugar da GI no hero
+  const base = { w: 1, h: 1 };
   function medir() {
     const r = caixa.getBoundingClientRect();
-    renderer.setSize(r.width, r.height, false);
-    camera.aspect = r.width / Math.max(1, r.height);
+    base.w = Math.max(1, r.width);
+    base.h = Math.max(1, r.height);
+    voo.style.width = base.w + "px";
+    voo.style.height = base.h + "px";
+    renderer.setSize(base.w, base.h, false);
+    camera.aspect = base.w / base.h;
     // Mantém a GI inteira mesmo em telas estreitas
     camera.position.z = camera.aspect < 1 ? 7.2 / Math.max(0.62, camera.aspect) : 7.2;
     camera.updateProjectionMatrix();
   }
   medir();
   new ResizeObserver(medir).observe(caixa);
+
+  // Voo: do hero ao canto, guiado pela rolagem
+  const suave = (x) => x * x * (3 - 2 * x);
+  let ancorada = false;
+  function voar() {
+    const p = suave(Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.62))));
+    raiz.style.setProperty("--voo", p.toFixed(3));
+    const r = caixa.getBoundingClientRect();
+    const de = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    let para = de, escalaFinal = 1;
+    if (assistente && botaoDock) {
+      const a = assistente.getBoundingClientRect();
+      const lado = botaoDock.offsetWidth || 68;
+      para = { x: a.right - lado / 2, y: a.bottom - lado / 2 };
+      // Fração da altura do canvas ocupada pela GI (corpo + contorno)
+      const visivel = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      const fracao = 2.35 / visivel;
+      escalaFinal = (lado / fracao) / base.h;
+    }
+    const s = 1 + (escalaFinal - 1) * p;
+    // Um arco leve no meio do caminho
+    const cx = de.x + (para.x - de.x) * p;
+    const cy = de.y + (para.y - de.y) * p - Math.sin(p * Math.PI) * 60;
+    voo.style.transform = `translate3d(${(cx - (base.w * s) / 2).toFixed(1)}px, ${(cy - (base.h * s) / 2).toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+    const agoraAncorada = p > 0.985;
+    if (agoraAncorada !== ancorada) {
+      ancorada = agoraAncorada;
+      raiz.classList.toggle("gi-ancorada", ancorada);
+    }
+    return p;
+  }
+
+  // Reações: pulinho ao tocar, olhar para o painel quando ele abre
+  let puloEm = -10;
+  let painelAberto = false;
+  addEventListener("gi:toque", () => (puloEm = relogio.getElapsedTime()));
+  addEventListener("gi:painel", (e) => (painelAberto = !!e.detail?.aberto));
 
   // Animação
   const alvo = { rx: 0, ry: 0, ox: 0, oy: 0 };
@@ -232,44 +272,30 @@ function iniciarGI() {
   renderer.domElement.addEventListener("webglcontextlost", (e) => {
     e.preventDefault();
     caixa.classList.remove("is-3d");
-    renderer.domElement.style.display = "none";
+    assistente?.classList.remove("tem-3d");
+    voo.remove();
   });
 
   (function quadro(agora) {
     requestAnimationFrame(quadro);
-    if (!heroVisivel) return;
     const t = relogio.getElapsedTime();
-    const rolagem = Math.min(1, scrollY / (hero.offsetHeight * 0.7));
+    const p = voar();
 
-    // No celular, sem mouse: um balanço lento para a GI não ficar parada
-    alvo.ry = (toque ? Math.sin(t * 0.55) * 0.35 : ponteiro.x * 0.45) + rolagem * 1.2;
-    alvo.rx = -ponteiro.y * 0.28 + rolagem * 0.25;
-    gi.rotation.y += (alvo.ry - gi.rotation.y) * 0.06;
-    gi.rotation.x += (alvo.rx - gi.rotation.x) * 0.06;
-    gi.rotation.z = Math.sin(t * 0.7) * 0.04;
-    gi.position.y = Math.sin(t * 1.1) * 0.08 + rolagem * 0.6;
+    // Giro durante o voo; no hero segue o mouse (no celular, balança sozinha)
+    const olharMouse = toque ? Math.sin(t * 0.55) * 0.35 : ponteiro.x * 0.45;
+    alvo.ry = olharMouse * (1 - p * 0.4) + Math.sin(p * Math.PI) * 0.85;
+    alvo.rx = -ponteiro.y * 0.28 * (1 - p * 0.4) + Math.sin(p * Math.PI) * 0.2;
+    gi.rotation.y += (alvo.ry - gi.rotation.y) * 0.08;
+    gi.rotation.x += (alvo.rx - gi.rotation.x) * 0.08;
+    const pulo = t - puloEm < 0.6 ? Math.sin(((t - puloEm) / 0.6) * Math.PI) : 0;
+    gi.rotation.z = Math.sin(t * 0.7) * 0.04 + pulo * 0.12;
+    gi.position.y = Math.sin(t * 1.1) * 0.08 + pulo * 0.45;
     sombra.scale.setScalar(1 - Math.sin(t * 1.1) * 0.06);
-    sombra.material.opacity = 1 - rolagem;
+    sombra.material.opacity = Math.max(0, 1 - p * 3);
 
-    // Grãos: órbita lenta, empurrados pelo mouse e espalhados pela rolagem
-    for (let i = 0; i < QTD; i++) {
-      const s = sementes[i];
-      const a = s.angulo + t * s.vel;
-      const r = s.raio * (1 + rolagem * 0.9);
-      aux.position.set(
-        Math.cos(a) * r + ponteiro.x * 0.18 * s.escala,
-        s.altura + Math.sin(t * 0.9 + s.fase) * 0.12 + ponteiro.y * 0.12 * s.escala + rolagem * 0.8,
-        Math.sin(a) * r * 0.55 - 0.2,
-      );
-      aux.setRotationFromAxisAngle(s.giro, t * 0.8 + s.fase);
-      aux.scale.setScalar(s.escala * (1 - rolagem * 0.6));
-      aux.updateMatrix();
-      graos.setMatrixAt(i, aux.matrix);
-    }
-    graos.instanceMatrix.needsUpdate = true;
-
-    // Olhar: segue o ponteiro, sem invadir a mordida
+    // Olhar: segue o ponteiro, sem invadir a mordida; com o painel aberto, olha para ele
     let ox = ponteiro.x * 0.17, oy = ponteiro.y * 0.15;
+    if (painelAberto) { ox = -0.14; oy = 0.12; }
     if (ox > 0.08 && oy > 0.04) { ox *= 0.7; oy *= 0.5; }
     alvo.ox += (ox - alvo.ox) * 0.12;
     alvo.oy += (oy - alvo.oy) * 0.12;
@@ -278,11 +304,9 @@ function iniciarGI() {
 
     // Piscadas
     if (agora > proximaPiscada) { piscouEm = agora; proximaPiscada = agora + 2400 + Math.random() * 3000; }
-    const p = (agora - piscouEm) / 180;
-    const palpebra = p >= 0 && p <= 1 ? 1 - Math.sin(p * Math.PI) * 0.9 : 1;
+    const pp = (agora - piscouEm) / 180;
+    const palpebra = pp >= 0 && pp <= 1 ? 1 - Math.sin(pp * Math.PI) * 0.9 : 1;
     olhoE.scale.y = olhoD.scale.y = palpebra;
-
-
 
     renderer.render(cena, camera);
   })(performance.now());
