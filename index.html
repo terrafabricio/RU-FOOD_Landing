@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&family=JetBrains+Mono:wght@500&family=Modak&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <script type="importmap">
     { "imports": {
@@ -25,6 +25,7 @@
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <div class="progresso" aria-hidden="true"><span data-progresso></span></div>
 
   <!-- Ícones (sprite) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -34,7 +35,8 @@
       <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
       <symbol id="i-x" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
       <symbol id="i-cadeado" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></g></symbol>
-      <symbol id="i-brilho" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.5 11.6 8a3 3 0 0 0 1.9 1.9L18 11.5l-4.5 1.6a3 3 0 0 0-1.9 1.9L10 19.5 8.4 15a3 3 0 0 0-1.9-1.9L2 11.5l4.5-1.6A3 3 0 0 0 8.4 8Z"/><path d="M19 3v4M17 5h4"/></g></symbol>
+      <symbol id="i-ficha" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></g></symbol>
+      <symbol id="i-megafone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5v3a1.5 1.5 0 0 0 1.5 1.5H7l7 4.5v-15L7 9H4.5A1.5 1.5 0 0 0 3 10.5Z"/><path d="M18 9a4.5 4.5 0 0 1 0 6M8.5 15l1.2 4.5"/></g></symbol>
       <symbol id="i-baixar" viewBox="0 0 24 24"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
       <symbol id="i-celular" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/></g></symbol>
       <symbol id="i-tablet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M11 16.5h2"/></g></symbol>
@@ -46,7 +48,7 @@
       <symbol id="i-sinal" viewBox="0 0 68 14"><g fill="currentColor"><rect x="0" y="9" width="3.4" height="5" rx="1"/><rect x="5" y="6.5" width="3.4" height="7.5" rx="1"/><rect x="10" y="4" width="3.4" height="10" rx="1"/><rect x="15" y="1" width="3.4" height="13" rx="1"/><path d="M33 3.6a12 12 0 0 1 8.4 3.4l1.3-1.4A14 14 0 0 0 33 1.6a14 14 0 0 0-9.7 4l1.3 1.4A12 12 0 0 1 33 3.6Zm0 4a8 8 0 0 1 5.6 2.3l1.3-1.4A10 10 0 0 0 33 5.6a10 10 0 0 0-6.9 2.9l1.3 1.4A8 8 0 0 1 33 7.6Zm0 4a4 4 0 0 1 2.8 1.2L33 15.6l-2.8-2.8A4 4 0 0 1 33 11.6Z"/><rect x="47" y="1.5" width="18" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.4" opacity=".45"/><rect x="49" y="3.5" width="14" height="7" rx="1.6"/><rect x="66" y="5" width="1.6" height="4" rx=".8" opacity=".45"/></g></symbol>
       <symbol id="gi-corpo" viewBox="0 0 100 100"><path d="M24 0H72A6.8 6.8 0 0 0 78.6 8.4 6.8 6.8 0 0 0 84.4 17.6 7.2 7.2 0 0 0 91.4 27 8.2 8.2 0 0 0 100 37.6V76A24 24 0 0 1 76 100H24A24 24 0 0 1 0 76V24A24 24 0 0 1 24 0Z"/></symbol>
       <radialGradient id="gi-luz" cx="50%" cy="52%" r="62%">
-        <stop offset="0" stop-color="#f86a5c"/><stop offset=".45" stop-color="#f43a2c"/><stop offset="1" stop-color="#e0231b"/>
+        <stop offset="0" stop-color="#f43431"/><stop offset=".7" stop-color="#e3241b"/><stop offset="1" stop-color="#b81b13"/>
       </radialGradient>
     </defs>
   </svg>
@@ -163,19 +165,27 @@
       </div>
     </section>
 
+    <!-- Faixa infinita: velocidade e sentido seguem a rolagem -->
+    <div class="faixa" aria-hidden="true" data-faixa>
+      <div class="faixa-trilho" data-faixa-trilho>
+        <span>Nem falta</span><i></i><span>Nem sobra</span><i></i><span class="ketchup">Na medida</span><i></i>
+        <span>App do aluno</span><i></i><span>Totem de fila</span><i></i><span>Painel web</span><i></i><span>Desktop com IA local</span><i></i>
+      </div>
+    </div>
+
     <!-- ============ POR QUE ============ -->
     <section class="secao porque" id="porque">
       <div class="porque-in">
         <h2 class="titulo-ancora" data-split>Por que<br /><span class="ketchup">RU-FOOD</span></h2>
         <div class="porque-texto">
           <h3 class="h3-grande" data-reveal>Porque cozinha coletiva não pode funcionar no chute.</h3>
-          <p data-reveal>
+          <p data-ler>
             Todo dia o restaurante decide quantas porções de cada proteína preparar para mais de mil pessoas,
             sem saber quem vem nem o que vão escolher. O RU-FOOD transforma a escolha do aluno numa
             <b>amostra estatística</b> e cruza com o histórico da catraca: a cozinha passa a produzir, comprar e
             estocar pela demanda real.
           </p>
-          <p data-reveal>
+          <p data-ler>
             Foi desenhado a partir das exigências do Termo de Referência do contrato, e por isso fecha o ciclo
             inteiro: cardápio, fichas técnicas, compras, estoque, segurança alimentar e prestação de contas com o fiscal.
           </p>
@@ -190,7 +200,7 @@
     </section>
 
     <!-- ============ DILEMA ============ -->
-    <section class="dilema" id="dilema" data-dilema>
+    <section class="dilema" id="dilema" data-dilema data-cortina>
       <div class="dilema-in">
         <div class="dilema-texto">
           <p class="sobrelinha sobrelinha--clara">O dilema</p>
@@ -224,7 +234,7 @@
           <div class="dilema-cena is-ativa" data-cena="0">
             <div class="dilema-split">
               <div class="dilema-lado dilema-lado--demanda">
-                <span class="dilema-tag"><svg aria-hidden="true"><use href="#i-celular"/></svg> Demanda de Alunos</span>
+                <span class="dilema-tag"><svg aria-hidden="true"><use href="#i-celular"/></svg> Demanda de alunos</span>
                 <div class="dilema-ilustra-box">
                   <img src="assets/ilustracoes/fome-menina.svg" alt="Aluna na fila do RU" class="dilema-img" width="185" height="185" />
                 </div>
@@ -239,7 +249,7 @@
               </div>
 
               <div class="dilema-lado dilema-lado--producao">
-                <span class="dilema-tag"><svg aria-hidden="true"><use href="#i-chip"/></svg> Produção da Cozinha</span>
+                <span class="dilema-tag"><svg aria-hidden="true"><use href="#i-chip"/></svg> Produção da cozinha</span>
                 <div class="dilema-ilustra-box">
                   <img src="assets/ilustracoes/cozinheira.svg" alt="Cozinheira do restaurante preparando pratos" class="dilema-img" width="187" height="187" />
                 </div>
@@ -357,7 +367,7 @@
           <li class="no no--3" data-no>
             <span class="no-selo" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
             <span class="no-num" aria-hidden="true">3</span>
-            <h3><svg aria-hidden="true"><use href="#i-brilho"/></svg> Explosão de fichas</h3>
+            <h3><svg aria-hidden="true"><use href="#i-ficha"/></svg> Explosão de fichas</h3>
             <p>As fichas técnicas convertem porções em quilos de cada insumo, com per capita e fator de cocção.</p>
             <span class="pilula">Per capita e fator de cocção</span>
           </li>
@@ -419,9 +429,9 @@
             </div>
             <img class="m-moldura" src="assets/mockups/iphone.webp" alt="" width="707" height="1437" />
           </div>
-          <span class="rotulo-flutua rotulo-flutua--1"><svg aria-hidden="true"><use href="#i-check"/></svg>Sem cadastro</span>
-          <span class="rotulo-flutua rotulo-flutua--2"><svg aria-hidden="true"><use href="#i-check"/></svg>Selos de alergênicos</span>
-          <span class="rotulo-flutua rotulo-flutua--3"><svg aria-hidden="true"><use href="#i-check"/></svg>Escolha em 2 toques</span>
+          <span class="rotulo-flutua rotulo-flutua--1" data-prof="-36"><svg aria-hidden="true"><use href="#i-check"/></svg>Sem cadastro</span>
+          <span class="rotulo-flutua rotulo-flutua--2" data-prof="44"><svg aria-hidden="true"><use href="#i-check"/></svg>Selos de alergênicos</span>
+          <span class="rotulo-flutua rotulo-flutua--3" data-prof="-52"><svg aria-hidden="true"><use href="#i-check"/></svg>Escolha em 2 toques</span>
         </div>
       </article>
 
@@ -442,8 +452,8 @@
           </div>
         </div>
         <div class="totem-cena" data-reveal-escala>
-          <div class="tv"><div class="tv-tela"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /></div><div class="tv-pe"></div></div>
-          <div class="ipad totem-ipad" data-tilt><div class="ipad-tela"><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /></div></div>
+          <div class="tv" data-prof="24"><div class="tv-tela"><img src="assets/telas/tv.webp" alt="Modo TV com o cardápio do dia" width="1600" height="900" loading="lazy" /></div><div class="tv-pe"></div></div>
+          <div class="ipad totem-ipad" data-tilt data-prof="-36"><div class="ipad-tela"><img src="assets/telas/totem.webp" alt="Totem de fila com QR Code e voto por toque" width="1600" height="1112" loading="lazy" /></div></div>
         </div>
       </article>
 
@@ -502,13 +512,13 @@
               <div class="foto-mac-tela"><img src="assets/telas/adm-ia.webp" alt="Tela de IA local na versão desktop do RU-FOOD" width="1920" height="1200" loading="lazy" /><i class="foto-mac-notch"></i></div>
             </div>
           </div>
-          <img class="foto-mac-sticker" src="assets/stickers/decisoes.webp" alt="" width="200" height="200" loading="lazy" />
+          <img class="foto-mac-sticker" data-prof="-70" src="assets/stickers/decisoes.webp" alt="" width="200" height="200" loading="lazy" />
         </figure>
       </article>
     </section>
 
     <!-- ============ GI ============ -->
-    <section class="gi-secao" id="gi">
+    <section class="gi-secao" id="gi" data-cortina>
       <div class="grade grade--clara" aria-hidden="true"></div>
       <div class="gi-secao-in">
         <div class="gi-secao-texto">
@@ -619,7 +629,7 @@
     </section>
 
     <!-- ============ CONHECER POR DENTRO (ACESSOS) ============ -->
-    <section class="acessos" id="acessos">
+    <section class="acessos" id="acessos" data-cortina>
       <div class="pontos" aria-hidden="true"></div>
       <div class="acessos-in">
         <div class="acessos-topo">
@@ -637,7 +647,7 @@
               <div class="m-mac-tela"><img src="assets/telas/adm-entrar.webp" alt="" width="1920" height="1200" loading="lazy" /></div>
               <img class="m-moldura" src="assets/mockups/macbook.webp" alt="" width="1803" height="1037" loading="lazy" />
             </div>
-            <div class="m-iphone acessos-iphone">
+            <div class="m-iphone acessos-iphone" data-prof="-40">
               <div class="m-iphone-tela">
                 <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
                 <img src="assets/telas/cel-entrar.webp" alt="" width="780" height="1594" loading="lazy" />
@@ -700,7 +710,7 @@
 
         <div class="notas">
           <p class="nota-senha" data-reveal><svg aria-hidden="true"><use href="#i-cadeado"/></svg><span><b>A senha vai à parte.</b> Ela é enviada de forma individual e confidencial para cada pessoa que vai testar.</span></p>
-          <p class="nota-senha nota-senha--mostarda" data-reveal><svg aria-hidden="true"><use href="#i-brilho"/></svg><span><b>Agora é hora de testar!</b> Mexa à vontade e mande print do que achar estranho: tudo pode ser ajustado na parametrização.</span></p>
+          <p class="nota-senha nota-senha--mostarda" data-reveal><svg aria-hidden="true"><use href="#i-megafone"/></svg><span><b>Agora é hora de testar!</b> Mexa à vontade e mande print do que achar estranho: tudo pode ser ajustado na parametrização.</span></p>
         </div>
       </div>
       <p class="sr" aria-live="polite" data-anuncio></p>
@@ -710,7 +720,7 @@
     <section class="final">
       <div class="final-texto">
         <img class="final-sticker" src="assets/stickers/ta-na-mesa.webp" alt="" width="260" height="260" loading="lazy" data-reveal-escala />
-        <h2 class="titulo-ancora" data-split>Tá na mesa.</h2>
+        <h2 class="titulo-ancora titulo-letreiro" data-split>Tá na mesa.</h2>
         <p class="cabeca-sub" data-reveal>O RU-FOOD está no ar e pronto para a validação com a equipe do restaurante e a fiscalização.</p>
         <div class="hero-ctas" data-reveal>
           <a href="#acessos" class="botao botao--p botao--g" data-magnetic>Conhecer por dentro <svg aria-hidden="true"><use href="#i-seta"/></svg></a>
@@ -718,14 +728,14 @@
         </div>
       </div>
       <div class="dupla-telefones" data-dupla aria-hidden="true">
-        <div class="m-iphone dupla-iphone dupla-iphone--atras" data-tilt-leve>
+        <div class="m-iphone dupla-iphone dupla-iphone--atras" data-tilt-leve data-prof="44">
           <div class="m-iphone-tela">
             <div class="barra-status" data-escuro><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
             <img src="assets/telas/cel-bemvindo.webp" alt="App do aluno - Boas-vindas" width="780" height="1594" loading="lazy" />
           </div>
           <img class="m-moldura" src="assets/mockups/iphone.webp" alt="" width="707" height="1437" loading="lazy" />
         </div>
-        <div class="m-iphone dupla-iphone dupla-iphone--frente" data-tilt>
+        <div class="m-iphone dupla-iphone dupla-iphone--frente" data-tilt data-prof="-30">
           <div class="m-iphone-tela">
             <div class="barra-status"><span>07:43</span><svg aria-hidden="true"><use href="#i-sinal"/></svg></div>
             <img src="assets/telas/cel-semana.webp" alt="App do aluno - Sua semana no RU" width="780" height="1594" loading="lazy" />

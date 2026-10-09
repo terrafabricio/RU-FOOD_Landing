@@ -8,7 +8,8 @@ import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
 const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const fraco = (navigator.hardwareConcurrency || 4) <= 2;
+const fraco = (navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 8) <= 4;
+const toque = matchMedia("(hover: none)").matches;
 const ponteiro = { x: 0, y: 0, nx: 0.5, ny: 0.5 };
 addEventListener("pointermove", (e) => {
   ponteiro.nx = e.clientX / innerWidth;
@@ -83,7 +84,7 @@ function iniciarShader() {
   const uRes = u("u_res"), uTime = u("u_time"), uMouse = u("u_mouse"), uFoco = u("u_foco");
 
   const palco = document.querySelector(".hero-palco");
-  const escala = Math.min(devicePixelRatio, 1.5) * 0.6; // fundo suave: meia resolução basta
+  const escala = Math.min(devicePixelRatio, 1.5) * (fraco ? 0.45 : 0.6); // fundo suave: meia resolução basta
   const foco = { x: 0.75, y: 0.7 };
   function medir() {
     const r = canvas.getBoundingClientRect();
@@ -121,8 +122,8 @@ const U = 0.02; // 100 unidades do SVG = 2 unidades na cena
 function iniciarGI() {
   const caixa = document.querySelector("[data-gi3d]");
   if (!caixa) return;
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const renderer = new THREE.WebGLRenderer({ antialias: !fraco, alpha: true, powerPreference: "high-performance" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, fraco || toque ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NoToneMapping;
   caixa.appendChild(renderer.domElement);
@@ -163,7 +164,7 @@ function iniciarGI() {
   // Olhos: cápsulas marrom-chapa na face da frente
   const frente = 15 * U + 5 * U;
   const olhoGeo = new THREE.CapsuleGeometry(5.1 * U, (18.5 - 10.2) * U, 10, 24);
-  const olhoMat = new THREE.MeshStandardMaterial({ color: 0x2a1710, roughness: 0.35, metalness: 0.05, envMapIntensity: 0.6 });
+  const olhoMat = new THREE.MeshStandardMaterial({ color: 0x1c1514, roughness: 0.35, metalness: 0.05, envMapIntensity: 0.6 });
   const olhos = new THREE.Group();
   const olhoE = new THREE.Mesh(olhoGeo, olhoMat);
   const olhoD = new THREE.Mesh(olhoGeo, olhoMat);
@@ -192,7 +193,22 @@ function iniciarGI() {
   sombra.position.y = -1.55;
   cena.add(sombra);
 
-
+  // Grãos de arroz flutuando em volta (uma malha instanciada: um único draw call)
+  const QTD = fraco ? 18 : 34;
+  const graoGeo = new THREE.CapsuleGeometry(0.035, 0.09, 4, 10);
+  const graoMat = new THREE.MeshStandardMaterial({ color: 0xfff6e6, roughness: 0.55, envMapIntensity: 0.5 });
+  const graos = new THREE.InstancedMesh(graoGeo, graoMat, QTD);
+  const sementes = Array.from({ length: QTD }, (_, i) => ({
+    raio: 1.45 + Math.random() * 0.85,
+    angulo: (i / QTD) * Math.PI * 2 + Math.random() * 0.4,
+    altura: (Math.random() - 0.5) * 2.4,
+    vel: (0.08 + Math.random() * 0.12) * (Math.random() < 0.5 ? -1 : 1),
+    giro: new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize(),
+    fase: Math.random() * Math.PI * 2,
+    escala: 0.75 + Math.random() * 0.6,
+  }));
+  const aux = new THREE.Object3D();
+  cena.add(graos);
 
   // Tamanho
   function medir() {
@@ -212,6 +228,12 @@ function iniciarGI() {
   let piscouEm = -1;
   const relogio = new THREE.Clock();
   caixa.classList.add("is-3d");
+  // Se o navegador derrubar o WebGL, a GI em SVG volta para o lugar
+  renderer.domElement.addEventListener("webglcontextlost", (e) => {
+    e.preventDefault();
+    caixa.classList.remove("is-3d");
+    renderer.domElement.style.display = "none";
+  });
 
   (function quadro(agora) {
     requestAnimationFrame(quadro);
@@ -219,7 +241,8 @@ function iniciarGI() {
     const t = relogio.getElapsedTime();
     const rolagem = Math.min(1, scrollY / (hero.offsetHeight * 0.7));
 
-    alvo.ry = ponteiro.x * 0.45 + rolagem * 1.2;
+    // No celular, sem mouse: um balanço lento para a GI não ficar parada
+    alvo.ry = (toque ? Math.sin(t * 0.55) * 0.35 : ponteiro.x * 0.45) + rolagem * 1.2;
     alvo.rx = -ponteiro.y * 0.28 + rolagem * 0.25;
     gi.rotation.y += (alvo.ry - gi.rotation.y) * 0.06;
     gi.rotation.x += (alvo.rx - gi.rotation.x) * 0.06;
@@ -227,6 +250,23 @@ function iniciarGI() {
     gi.position.y = Math.sin(t * 1.1) * 0.08 + rolagem * 0.6;
     sombra.scale.setScalar(1 - Math.sin(t * 1.1) * 0.06);
     sombra.material.opacity = 1 - rolagem;
+
+    // Grãos: órbita lenta, empurrados pelo mouse e espalhados pela rolagem
+    for (let i = 0; i < QTD; i++) {
+      const s = sementes[i];
+      const a = s.angulo + t * s.vel;
+      const r = s.raio * (1 + rolagem * 0.9);
+      aux.position.set(
+        Math.cos(a) * r + ponteiro.x * 0.18 * s.escala,
+        s.altura + Math.sin(t * 0.9 + s.fase) * 0.12 + ponteiro.y * 0.12 * s.escala + rolagem * 0.8,
+        Math.sin(a) * r * 0.55 - 0.2,
+      );
+      aux.setRotationFromAxisAngle(s.giro, t * 0.8 + s.fase);
+      aux.scale.setScalar(s.escala * (1 - rolagem * 0.6));
+      aux.updateMatrix();
+      graos.setMatrixAt(i, aux.matrix);
+    }
+    graos.instanceMatrix.needsUpdate = true;
 
     // Olhar: segue o ponteiro, sem invadir a mordida
     let ox = ponteiro.x * 0.17, oy = ponteiro.y * 0.15;
